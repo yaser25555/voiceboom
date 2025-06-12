@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <title>اختبار المصادقة</title>
+    <style>
+        body {
+            font-family: sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            background-color: #f0f0f0;
+        }
+        .auth-container {
+            background-color: white;
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            text-align: center;
+        }
+        .auth-form-group {
+            margin-bottom: 15px;
+        }
+        .auth-form-group label {
+            display: block;
+            margin-bottom: 5px;
+        }
+        .auth-form-group input {
+            padding: 8px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+        }
+        .auth-buttons button {
+            padding: 10px 15px;
+            margin: 0 5px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+        #authMessage {
+            margin-top: 15px;
+            color: red;
+            min-height: 1.2em;
+        }
+    </style>
+</head>
+<body>
+
+<div class="auth-container" id="authContainer">
+    <h2>اختبار المصادقة</h2>
+    <div class="auth-form-group">
+        <label for="authUsername">اسم المستخدم:</label>
+        <input type="text" id="authUsername">
+    </div>
+    <div class="auth-form-group">
+        <label for="authPassword">كلمة المرور:</label>
+        <input type="password" id="authPassword">
+    </div>
+    <div class="auth-buttons">
+        <button id="loginBtn">تسجيل الدخول (اختبار)</button>
+        <button id="registerBtn">إنشاء حساب (اختبار)</button>
+    </div>
+    <div id="authMessage"></div>
+</div>
+
+<script>
+    // أسطر تشخيصية للتأكد من تنفيذ الكود
+    alert("JavaScript is running!"); // هذا سيظهر مربع تنبيه عند فتح الصفحة
+    console.log("--- JavaScript block started ---");
+
+    document.addEventListener('DOMContentLoaded', () => {
+        console.log("--- DOMContentLoaded fired ---");
+
+        const authContainer = document.getElementById('authContainer');
+        const authUsernameInput = document.getElementById('authUsername');
+        const authPasswordInput = document.getElementById('authPassword');
+        const loginBtn = document.getElementById('loginBtn');
+        const registerBtn = document.getElementById('registerBtn');
+        const authMessage = document.getElementById('authMessage');
+
+        console.log("Auth elements references obtained:", { loginBtn, registerBtn, authMessage });
+
+
+        // دالة لإظهار رسالة في منطقة الرسائل
+        function showAuthMessage(msg, color = 'red') {
+            authMessage.textContent = msg;
+            authMessage.style.color = color;
+        }
+
+        // إضافة مستمعي الأحداث لأزرار المصادقة
+        console.log("Adding event listeners to auth buttons.");
+
+        registerBtn.addEventListener('click', () => {
+            console.log("Register button clicked!");
+            const username = authUsernameInput.value.trim();
+            const password = authPasswordInput.value.trim();
+            console.log("Attempting registration test with:", { username, password });
+            showAuthMessage(`محاولة إنشاء حساب لـ: ${username}`, 'blue');
+
+            // هنا فقط نختبر الاستجابة، لا نرسل طلبًا فعليًا للخادم
+            // يمكنك إضافة منطق إرسال الطلب لاحقًا
+            // showAuthMessage('تم اكتشاف النقر على إنشاء حساب!'); // رسالة بسيطة
+        });
+
+        loginBtn.addEventListener('click', () => {
+            console.log("Login button clicked!");
+             const username = authUsernameInput.value.trim();
+            const password = authPasswordInput.value.trim();
+             console.log("Attempting login test with:", { username, password });
+            showAuthMessage(`محاولة تسجيل الدخول لـ: ${username}`, 'blue');
+            // هنا فقط نختبر الاستجابة، لا نرسل طلبًا فعليًا للخادم
+            // يمكنك إضافة منطق إرسال الطلب لاحقًا
+            // showAuthMessage('تم اكتشاف النقر على تسجيل الدخول!'); // رسالة بسيطة
+        });
+
+        // تأكيد أن الأزرار مفعلة مبدئيا
+        loginBtn.disabled = false;
+        registerBtn.disabled = false;
+        console.log("Auth buttons should be enabled now.");
+
+    }); // نهاية DOMContentLoaded
+
+    console.log("--- JavaScript block finished ---"); // للتأكد من أن السكربت وصل إلى هنا
+
+</script>
+
+</body>
+</html>

@@ -1,0 +1,367 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <title>INFINITY - تسجيل الدخول</title>
+    <link href="https://fonts.googleapis.com/css2?family=Amiri&family=Scheherazade+New:wght@400;700&family=Noto+Naskh+Arabic:wght@400;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <style>
+        body {
+            font-family: 'Noto Naskh Arabic', sans-serif;
+            background-color: #2c3e50;
+            color: #ecf0f1;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            margin: 0;
+            padding: 20px;
+            box-sizing: border-box;
+            background-image: url('background_image.jpg'); /* تأكد من وجود هذه الصورة في نفس المجلد */
+            background-size: cover;
+            background-position: center;
+            background-attachment: fixed;
+            position: relative;
+        }
+
+        body::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-color: rgba(0, 0, 0, 0.6); /* طبقة شفافة لتعتيم الخلفية */
+            z-index: 0;
+        }
+
+        .login-container {
+            background-color: rgba(44, 62, 80, 0.95); /* خلفية داكنة شفافة */
+            padding: 40px;
+            border-radius: 15px;
+            box-shadow: 0 0 25px rgba(0, 0, 0, 0.7);
+            text-align: center;
+            width: 100%;
+            max-width: 450px;
+            z-index: 1; /* تأكد أن المحتوى فوق الطبقة الشفافة */
+        }
+
+        .logo {
+            width: 100px;
+            height: 100px;
+            border-radius: 50%;
+            border: 3px solid #3498db;
+            margin-bottom: 20px;
+            object-fit: cover;
+        }
+
+        h1 {
+            font-family: 'Amiri', serif;
+            color: #3498db;
+            margin-bottom: 25px;
+            font-size: 2.5em;
+            text-shadow: 1px 1px 5px rgba(0, 0, 0, 0.5);
+        }
+
+        .tab-buttons {
+            display: flex;
+            justify-content: center;
+            margin-bottom: 20px;
+            border-bottom: 2px solid #34495e;
+        }
+
+        .tab-button {
+            background-color: transparent;
+            color: #bdc3c7;
+            border: none;
+            padding: 12px 20px;
+            font-size: 1.1em;
+            cursor: pointer;
+            transition: color 0.3s ease, border-bottom 0.3s ease;
+            position: relative;
+            outline: none;
+        }
+
+        .tab-button:hover {
+            color: #ecf0f1;
+        }
+
+        .tab-button.active {
+            color: #3498db;
+            border-bottom: 3px solid #3498db;
+            font-weight: bold;
+        }
+
+        .tab-content {
+            display: none;
+            padding: 20px 0;
+        }
+
+        .tab-content.active {
+            display: block;
+        }
+
+        .input-group {
+            margin-bottom: 20px;
+            text-align: right; /* محاذاة النص لليمين */
+        }
+
+        .input-group label {
+            display: block;
+            margin-bottom: 8px;
+            font-size: 1.1em;
+            color: #ecf0f1;
+        }
+
+        .input-group input {
+            width: 100%;
+            padding: 12px;
+            border: 1px solid #3498db;
+            border-radius: 8px;
+            background-color: #34495e;
+            color: #ecf0f1;
+            font-size: 1.1em;
+            box-sizing: border-box;
+            text-align: right; /* محاذاة النص المدخل لليمين */
+            transition: border-color 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .input-group input:focus {
+            border-color: #5dade2;
+            box-shadow: 0 0 8px rgba(52, 152, 219, 0.6);
+            outline: none;
+        }
+
+        .error-message {
+            color: #e74c3c;
+            margin-top: 10px;
+            font-size: 0.95em;
+            min-height: 20px; /* للحفاظ على المساحة عند عدم وجود رسالة */
+            text-align: right;
+        }
+
+        button {
+            background-color: #3498db;
+            color: white;
+            border: none;
+            padding: 15px 30px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 1.2em;
+            font-weight: bold;
+            transition: background-color 0.3s ease, transform 0.1s ease;
+            width: 100%;
+        }
+
+        button:hover {
+            background-color: #2980b9;
+            transform: translateY(-2px);
+        }
+
+        .contact-info p {
+            font-size: 1.1em;
+            margin-bottom: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: flex-end; /* محاذاة لليمين */
+            gap: 10px;
+        }
+
+        .contact-info a {
+            color: #3498db;
+            text-decoration: none;
+            transition: color 0.3s ease;
+        }
+
+        .contact-info a:hover {
+            color: #5dade2;
+        }
+
+        .instructions-content {
+            text-align: right; /* محاذاة لليمين */
+            line-height: 1.6;
+            font-size: 1.05em;
+            max-height: 300px; /* لتحديد أقصى ارتفاع للمحتوى */
+            overflow-y: auto; /* لإضافة شريط تمرير إذا تجاوز المحتوى الارتفاع */
+            padding-left: 10px; /* لإضافة مساحة على اليسار لشريط التمرير إذا وجد */
+        }
+
+        .instructions-content h3 {
+            color: #3498db;
+            margin-top: 20px;
+            margin-bottom: 10px;
+            font-size: 1.3em;
+        }
+
+        .instructions-content ul {
+            list-style: none; /* إزالة النقاط الافتراضية */
+            padding: 0;
+            margin: 0;
+        }
+
+        .instructions-content ul li {
+            position: relative;
+            padding-right: 25px; /* مسافة للنقطة المخصصة */
+            margin-bottom: 8px;
+        }
+
+        .instructions-content ul li::before {
+            content: '\2022'; /* رمز نقطة بسيطة */
+            color: #3498db;
+            font-weight: bold;
+            display: inline-block;
+            width: 1em;
+            margin-right: -1em;
+            position: absolute;
+            right: 0;
+            top: 0;
+        }
+    </style>
+</head>
+<body>
+    <div class="login-container">
+        <img src="logo.png" alt="شعار اللعبة" class="logo">
+        <h1>INFINITY</h1>
+
+        <div class="tab-buttons">
+            <button class="tab-button active" data-tab="login">تسجيل الدخول</button>
+            <button class="tab-button" data-tab="contact">تواصل معنا</button>
+            <button class="tab-button" data-tab="instructions">التعليمات</button>
+        </div>
+
+        <div id="loginTab" class="tab-content active">
+            <div class="input-group">
+                <label for="username">اسم المستخدم:</label>
+                <input type="text" id="username" placeholder="أدخل اسم المستخدم الخاص بك">
+            </div>
+            <div class="input-group">
+                <label for="password">كلمة المرور (للمشرف فقط):</label>
+                <input type="password" id="password" placeholder="اختياري للمشرف">
+            </div>
+            <div id="errorMessage" class="error-message"></div>
+            <button id="loginButton">تسجيل الدخول</button>
+        </div>
+
+        <div id="contactTab" class="tab-content">
+            <div class="contact-info">
+                <p><i class="fas fa-envelope"></i> البريد الإلكتروني: <a href="mailto:yaser.haroon79@gmail.com">yaser.haroon79@gmail.com</a></p>
+                <p><i class="fab fa-whatsapp"></i> واتساب: <a href="https://wa.me/00866554593007" target="_blank">00866554593007</a></p>
+            </div>
+        </div>
+
+        <div id="instructionsTab" class="tab-content">
+            <div class="instructions-content">
+                <h3>كيف تلعب:</h3>
+                <ul>
+                    <li>ابدأ اللعبة بالضغط على زر **"تلقائي"**، **"ضربة ثلاثية"**، أو **"ضربة المطرقة"**.</li>
+                    <li>كل زر يفتح عددًا معينًا من الصناديق ويكلفك نقاطًا.</li>
+                    <li>الصناديق تحتوي على نقاط موجبة أو سالبة.</li>
+                    <li>هدف اللعبة هو جمع أكبر عدد من النقاط.</li>
+                    <li>راقب نقاطك الكلية و**أعلى النقاط** لتبقى متقدمًا!</li>
+                </ul>
+
+                <h3>أنواع الصناديق:</h3>
+                <ul>
+                    <li>**صناديق موجبة (+1، +5، +10 نقاط)**: تزيد من نقاطك.</li>
+                    <li>**صناديق ضريبة (-5، -10 نقاط)**: تخصم نقاطًا من رصيدك.</li>
+                </ul>
+
+                <h3>الأزرار الخاصة:</h3>
+                <ul>
+                    <li><i class="fas fa-magic"></i> **تلقائي (يكلف 2 نقاط)**: يفتح صندوقًا واحدًا بشكل عشوائي.</li>
+                    <li><i class="fas fa-bullseye"></i> **ضربة ثلاثية (تكلف 5 نقاط)**: تفتح 3 صناديق عشوائية.</li>
+                    <li><i class="fas fa-hammer"></i> **ضربة المطرقة (تكلف 20 نقطة)**: تفتح 15 صندوقًا عشوائيًا.</li>
+                </ul>
+
+                <h3>إدارة الصوت:</h3>
+                <ul>
+                    <li>استخدم أزرار الصوت أو شريط التمرير لضبط مستوى الصوت.</li>
+                    <li>زر كتم الصوت <i class="fas fa-volume-mute"></i> يمكنه إيقاف أو تشغيل جميع الأصوات.</li>
+                </ul>
+
+                <h3>للمشرف:</h3>
+                <ul>
+                    <li>يمكن للمشرف الدخول بكلمة مرور خاصة للوصول إلى **إعدادات اللعبة**.</li>
+                    <li>في الإعدادات، يمكن للمشرف تغيير عدد الصناديق في الجولة وتوزيع النقاط.</li>
+                    <li>يمكن للمشرف أيضًا **إعادة تعيين اللعبة** بالكامل.</li>
+                </ul>
+                <p>استمتع باللعب وحظاً سعيداً!</p>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const usernameInput = document.getElementById('username');
+            const passwordInput = document.getElementById('password');
+            const loginButton = document.getElementById('loginButton');
+            const errorMessage = document.getElementById('errorMessage');
+            const tabButtons = document.querySelectorAll('.tab-button');
+            const tabContents = document.querySelectorAll('.tab-content');
+
+            tabButtons.forEach(button => {
+                button.addEventListener('click', () => {
+                    const targetTab = button.dataset.tab;
+
+                    // إزالة فئة 'active' من جميع أزرار التبويبات
+                    tabButtons.forEach(btn => btn.classList.remove('active'));
+                    // إضافة فئة 'active' للزر المضغوط
+                    button.classList.add('active');
+
+                    // إخفاء جميع محتويات التبويبات
+                    tabContents.forEach(content => content.classList.remove('active'));
+                    // إظهار محتوى التبويب المستهدف
+                    document.getElementById(targetTab + 'Tab').classList.add('active');
+                });
+            });
+
+            loginButton.addEventListener('click', async () => {
+                const username = usernameInput.value.trim();
+                const password = passwordInput.value.trim();
+
+                if (!username) {
+                    errorMessage.textContent = 'الرجاء إدخال اسم المستخدم.';
+                    return;
+                }
+
+                errorMessage.textContent = ''; // مسح أي رسائل خطأ سابقة
+
+                try {
+                    const response = await fetch('/api/login', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json'
+                        },
+                        body: JSON.stringify({ username, password })
+                    });
+
+                    const data = await response.json();
+
+                    if (response.ok) {
+                        localStorage.setItem('username', username);
+                        localStorage.setItem('isAdmin', data.isAdmin);
+                        window.location.href = 'game.html';
+                    } else {
+                        errorMessage.textContent = data.message || 'فشل تسجيل الدخول. الرجاء التحقق من اسم المستخدم وكلمة المرور.';
+                    }
+                } catch (error) {
+                    console.error('Error during login:', error);
+                    errorMessage.textContent = 'حدث خطأ غير متوقع. الرجاء المحاولة مرة أخرى لاحقاً.';
+                }
+            });
+
+            // يمكن للمستخدمين الضغط على Enter لتسجيل الدخول
+            usernameInput.addEventListener('keypress', (e) => {
+                if (e.key === 'Enter') {
+                    loginButton.click();
+                }
+            });
+            passwordInput.addEventListener('keypress', (e) => {
+                if (e.key === 'Enter') {
+                    loginButton.click();
+                }
+            });
+        });
+    </script>
+</body>
+</html>
