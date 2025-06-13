@@ -257,6 +257,7 @@
                     } catch (error) {
                         console.error('Error during registration:', error);
                         registerErrorMessage.textContent = 'حدث خطأ غير متوقع أثناء التسجيل. الرجاء المحاولة مرة أخرى لاحقاً.';
+                        console.log('Backend response data:', data); // Add this for debugging
                     }
                 });
             }
