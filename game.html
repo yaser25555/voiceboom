@@ -2,7 +2,7 @@
 <html lang="ar" dir="rtl">
 <head>
     <meta charset="UTF-8">
-    <title>Voice Boom</title>
+    <title>Voice Boom - اللعبة</title>
     <link href="https://fonts.googleapis.com/css2?family=Amiri&family=Scheherazade+New:wght@400;700&family=Noto+Naskh+Arabic:wght@400;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
     <style>
@@ -18,554 +18,625 @@
             padding: 20px;
             box-sizing: border-box;
             text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.5);
-            overflow-x: hidden;
+            overflow-x: hidden; /* لمنع شريط التمرير الأفقي */
             position: relative;
             z-index: 0;
 
-            background-image: url('background_image.jpg');
+            background-image: url('background_image.jpg'); /* تأكد من وجود هذه الصورة */
             background-size: cover;
             background-position: center;
             background-attachment: fixed;
-            background-color: #1a1a2e; /* لون احتياطي للخلفية */
+            background-repeat: no-repeat;
         }
 
+        /* تراكب الخلفية لتعتيم الصورة وجعل النص أكثر وضوحًا */
         body::before {
             content: '';
             position: absolute;
             top: 0;
             left: 0;
-            right: 0;
-            bottom: 0;
-            background: rgba(0, 0, 0, 0.6); /* طبقة شفافة لتعتيم الخلفية وجعل النص أكثر وضوحاً */
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.6); /* طبقة سوداء شفافة */
             z-index: -1;
         }
 
-        .header {
+        header {
             width: 100%;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            padding: 10px 20px;
-            background-color: rgba(0, 0, 0, 0.5);
-            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
-            margin-bottom: 20px;
-            border-radius: 8px;
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
-            flex-wrap: wrap; /* للسماح للعناصر بالنزول لأسطر جديدة في الشاشات الصغيرة */
+            text-align: center;
+            margin-bottom: 30px;
+            position: relative;
+            z-index: 1;
         }
 
         .user-info, .game-stats {
-            display: flex;
-            align-items: center;
-            font-size: 1.1em;
-            color: #E0E0E0;
-            margin: 5px 10px;
-        }
-
-        .user-info i, .game-stats i {
-            margin-left: 8px; /* المسافة بين الأيقونة والنص */
-            color: #1abc9c;
-        }
-
-        .game-area {
-            background-color: rgba(44, 62, 80, 0.85);
-            padding: 30px;
+            background-color: rgba(44, 62, 80, 0.8);
             border-radius: 10px;
-            box-shadow: 0 0 25px rgba(0, 0, 0, 0.7);
-            width: 100%;
-            max-width: 700px;
+            padding: 15px 25px;
+            margin: 10px 0;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
             text-align: center;
+            width: 100%;
+            max-width: 400px;
+            position: relative; /* لزر الخروج */
+        }
+
+        .user-info h2, .game-stats p {
+            margin: 5px 0;
+            font-size: 1.2em;
+        }
+        
+        .user-info h2 {
+            font-size: 1.5em;
+            color: #3498db;
+        }
+
+        .game-buttons {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
             margin-top: 20px;
-            position: relative;
-            z-index: 1;
-            border: 1px solid rgba(255, 255, 255, 0.1);
+            width: 100%;
+            max-width: 350px;
         }
 
-        .section-title {
-            color: #f39c12;
-            margin-bottom: 20px;
-            font-family: 'Amiri', serif;
-            font-size: 2.2em;
-        }
-
-        .message-box {
-            background-color: rgba(26, 188, 156, 0.2);
-            color: #1abc9c;
-            padding: 15px;
+        button {
+            background-color: #3498db;
+            color: white;
+            border: none;
             border-radius: 8px;
-            margin-bottom: 25px;
-            font-size: 1.1em;
-            border: 1px solid rgba(26, 188, 156, 0.5);
-            min-height: 50px; /* ضمان ارتفاع ثابت */
+            padding: 15px 25px;
+            font-size: 1.3em;
+            cursor: pointer;
+            transition: background-color 0.3s ease, transform 0.2s ease;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
             display: flex;
             align-items: center;
             justify-content: center;
+            gap: 10px;
         }
 
-        .action-buttons {
-            display: flex;
-            flex-wrap: wrap;
-            justify-content: center;
-            gap: 15px;
-            margin-bottom: 30px;
-        }
-
-        .action-button {
+        button:hover {
             background-color: #2980b9;
-            color: #fff;
-            border: none;
-            padding: 15px 30px;
-            font-size: 1.2em;
-            cursor: pointer;
-            border-radius: 8px;
-            transition: background-color 0.3s ease, transform 0.2s ease, box-shadow 0.3s ease;
-            min-width: 150px; /* ضمان عرض أدنى للأزرار */
-            font-family: 'Noto Naskh Arabic', sans-serif;
-            text-shadow: 1px 1px 2px rgba(0,0,0,0.4);
-            box-shadow: 0 4px 8px rgba(0,0,0,0.3);
+            transform: translateY(-2px);
         }
 
-        .action-button:hover:not(:disabled) {
-            background-color: #3498db;
-            transform: translateY(-3px);
-            box-shadow: 0 6px 12px rgba(0,0,0,0.4);
+        button:active {
+            transform: translateY(0);
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
         }
 
-        .action-button:disabled {
+        button:disabled {
             background-color: #7f8c8d;
             cursor: not-allowed;
-            opacity: 0.7;
+            box-shadow: none;
+            transform: none;
         }
 
-        .settings-area {
-            background-color: rgba(52, 73, 94, 0.7);
-            padding: 25px;
-            border-radius: 10px;
-            margin-top: 30px;
-            box-shadow: inset 0 0 10px rgba(0, 0, 0, 0.4);
-            text-align: right; /* لمحاذاة العناصر داخل الإعدادات لليمين */
+        .message {
+            background-color: rgba(52, 152, 219, 0.9);
+            color: white;
+            padding: 15px;
+            border-radius: 8px;
+            margin-top: 20px;
+            width: 100%;
+            max-width: 500px;
+            text-align: center;
+            font-size: 1.1em;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+            animation: fadeIn 0.5s ease-out;
         }
 
-        .settings-area label {
-            display: block;
-            margin-bottom: 10px;
-            color: #bdc3c7;
-            font-size: 1em;
+        .message.error {
+            background-color: rgba(231, 76, 60, 0.9);
         }
 
-        .settings-area input[type="number"] {
-            width: calc(100% - 20px);
-            padding: 10px;
-            margin-bottom: 15px;
-            background-color: #34495e;
-            border: 1px solid #5a7d9a;
+        .message.success {
+            background-color: rgba(46, 204, 113, 0.9);
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(-10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* زر الخروج (Logout) */
+        #logoutBtn {
+            background-color: #e74c3c;
+            position: absolute;
+            top: 15px;
+            right: 15px;
+            padding: 8px 15px;
+            font-size: 0.9em;
             border-radius: 5px;
+            box-shadow: none;
+            transition: background-color 0.3s ease;
+        }
+        #logoutBtn:hover {
+            background-color: #c0392b;
+            transform: none;
+        }
+
+        /* زر كتم الصوت */
+        #muteToggleBtn {
+            background-color: #6c7a89;
+            position: absolute;
+            top: 15px;
+            left: 15px;
+            padding: 8px 15px;
+            font-size: 0.9em;
+            border-radius: 5px;
+            box-shadow: none;
+            transition: background-color 0.3s ease;
+        }
+        #muteToggleBtn:hover {
+            background-color: #4a545f;
+            transform: none;
+        }
+
+        /* قسم المدير (Admin Settings) */
+        .admin-settings {
+            background-color: rgba(52, 73, 94, 0.85);
+            border-radius: 10px;
+            padding: 20px;
+            margin-top: 30px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.4);
+            width: 100%;
+            max-width: 500px;
+            display: none; /* مخفي افتراضياً */
+            flex-direction: column;
+            gap: 15px;
+        }
+
+        .admin-settings h3 {
+            color: #f1c40f;
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+        .admin-settings label {
+            display: block;
+            margin-bottom: 5px;
+            font-size: 1.1em;
+            color: #bdc3c7;
+        }
+
+        .admin-settings input[type="number"],
+        .admin-settings input[type="text"] {
+            width: calc(100% - 22px); /* لتأخذ المساحة كاملة مع البادينغ */
+            padding: 10px;
+            border-radius: 5px;
+            border: 1px solid #7f8c8d;
+            background-color: #34495e;
             color: #ecf0f1;
             font-size: 1em;
-            box-sizing: border-box;
-            text-align: right;
         }
 
-        .settings-area button {
-            background-color: #e67e22;
-            color: #fff;
-            border: none;
-            padding: 12px 25px;
-            font-size: 1em;
-            cursor: pointer;
-            border-radius: 5px;
-            transition: background-color 0.3s ease, transform 0.2s ease;
+        .admin-settings button {
+            background-color: #f39c12;
             margin-top: 10px;
         }
 
-        .settings-area button:hover {
-            background-color: #f39c12;
-            transform: translateY(-2px);
+        .admin-settings button:hover {
+            background-color: #e67e22;
         }
 
-        .control-buttons {
+        /* زر إظهار/إخفاء لوحة المدير */
+        #toggleBtn {
+            background-color: #8e44ad;
+            margin-top: 20px;
+            width: auto;
+            align-self: center; /* ليتم توسيطه في العمود */
+        }
+        #toggleBtn:hover {
+            background-color: #9b59b6;
+        }
+
+        /* شاشة التحميل Overlay */
+        #loadingOverlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.85); /* خلفية شبه شفافة */
+            color: white;
             display: flex;
+            flex-direction: column;
             justify-content: center;
-            gap: 15px;
-            margin-top: 25px;
-            flex-wrap: wrap;
+            align-items: center;
+            font-size: 2em;
+            z-index: 9999; /* ليكون فوق كل شيء */
+            text-align: center;
         }
-
-        .control-button {
-            background-color: #c0392b;
-            color: #fff;
-            border: none;
-            padding: 10px 20px;
-            font-size: 1em;
-            cursor: pointer;
-            border-radius: 8px;
-            transition: background-color 0.3s ease, transform 0.2s ease;
-            box-shadow: 0 2px 5px rgba(0,0,0,0.3);
-            font-family: 'Noto Naskh Arabic', sans-serif;
+        #loadingOverlay .spinner {
+            border: 8px solid rgba(255, 255, 255, 0.3);
+            border-top: 8px solid #3498db;
+            border-radius: 50%;
+            width: 60px;
+            height: 60px;
+            animation: spin 1s linear infinite;
+            margin-bottom: 20px;
         }
-
-        .control-button:hover {
-            background-color: #e74c3c;
-            transform: translateY(-2px);
-        }
-
-        /* تحسينات Responsive */
-        @media (max-width: 768px) {
-            .header {
-                flex-direction: column;
-                align-items: flex-start;
-            }
-            .user-info, .game-stats {
-                width: 100%;
-                justify-content: flex-start;
-                margin-bottom: 10px;
-            }
-            .header button {
-                width: 100%;
-                margin-top: 10px;
-            }
-            .action-button {
-                width: 100%;
-                min-width: unset;
-            }
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
         }
     </style>
 </head>
 <body>
-    <div class="header">
-        <div class="user-info">
-            <i class="fas fa-user"></i> <span id="usernameDisplay">اللاعب:</span>
-        </div>
-        <div class="game-stats">
-            <i class="fas fa-coins"></i> <span id="scoreDisplay">النقاط: 0</span>
-            <i class="fas fa-trophy" style="margin-right: 15px;"></i> <span id="levelDisplay">المستوى: 1</span>
-            <i class="fas fa-redo-alt" style="margin-right: 15px;"></i> <span id="attemptsDisplay">المحاولات: 3</span>
-        </div>
-        <button id="adminDashboardLink" class="control-button" style="background-color: #3f51b5; display: none;">
-            <i class="fas fa-tachometer-alt"></i> لوحة تحكم المدير
-        </button>
-        <button id="logoutBtn" class="control-button"><i class="fas fa-sign-out-alt"></i> تسجيل الخروج</button>
+    <div id="loadingOverlay" style="display: none;">
+        <div class="spinner"></div>
+        <p>جارٍ المعالجة...</p>
     </div>
 
-    <div class="game-area">
-        <h2 class="section-title font-amiri">لعبة Voice Boom</h2>
-        <div id="messageDisplay" class="message-box">اضغط "تلقائي" أو "ضربة ثلاثية" أو "ضربة المطرقة" للكشف عن النقاط!</div>
+    <header>
+        <h1>Voice Boom</h1>
+    </header>
 
-        <div class="action-buttons">
-            <button id="autoPlayBtn" class="action-button"><i class="fas fa-robot"></i> تلقائي</button>
-            <button id="tripleStrikeBtn" class="action-button"><i class="fas fa-dice-d6"></i> ضربة ثلاثية</button>
-            <button id="hammerStrikeBtn" class="action-button"><i class="fas fa-hammer"></i> ضربة المطرقة</button>
-        </div>
+    <div class="user-info">
+        <h2>أهلاً بك يا <span id="usernameDisplay"></span>!</h2>
+        <button id="logoutBtn"><i class="fas fa-sign-out-alt"></i> خروج</button>
+        <button id="muteToggleBtn"><i class="fas fa-volume-up"></i></button> </div>
 
-        <div class="control-buttons">
-            <button id="settingsToggleBtn" class="control-button" style="background-color: #f39c12; display: none;">
-                <i class="fas fa-cog"></i> إظهار الإعدادات
-            </button>
-            <button id="muteToggleBtn" class="control-button" style="background-color: #34495e;">
-                <i class="fas fa-volume-up"></i> كتم الصوت
-            </button>
-        </div>
-
-        <div id="settingsArea" class="settings-area" style="display: none;">
-            <h3 class="section-title" style="font-size: 1.5em; margin-bottom: 20px; color: #f39c12;">إعدادات اللعبة</h3>
-            <div class="form-group">
-                <label for="maxScoreInput">الحد الأقصى للنقاط:</label>
-                <input type="number" id="maxScoreInput" value="100">
-            </div>
-            <div class="form-group">
-                <label for="maxLevelInput">الحد الأقصى للمستوى:</label>
-                <input type="number" id="maxLevelInput" value="5">
-            </div>
-            <div class="form-group">
-                <label for="initialAttemptsInput">عدد المحاولات الأولية:</label>
-                <input type="number" id="initialAttemptsInput" value="3">
-            </div>
-            <button id="saveSettingsBtn">حفظ الإعدادات</button>
-        </div>
+    <div class="game-stats">
+        <p>النقاط: <span id="scoreDisplay">0</span></p>
+        <p>المستوى: <span id="levelDisplay">1</span></p>
+        <p>المحاولات المتبقية: <span id="attemptsDisplay">0</span></p>
     </div>
 
-    <audio id="backgroundMusic" loop>
-        <source src="music.mp3" type="audio/mpeg"> Your browser does not support the audio element.
+    <audio id="backgroundMusic" loop autoplay>
+        <source src="background_music.mp3" type="audio/mpeg"> متصفحك لا يدعم عنصر الصوت.
     </audio>
 
-    <script>
-        document.addEventListener('DOMContentLoaded', () => {
-            const usernameDisplay = document.getElementById('usernameDisplay');
-            const scoreDisplay = document.getElementById('scoreDisplay');
-            const levelDisplay = document.getElementById('levelDisplay');
-            const attemptsDisplay = document.getElementById('attemptsDisplay');
-            const messageDisplay = document.getElementById('messageDisplay');
+    <div class="game-buttons" id="gameButtons">
+        <button id="autoBtn"><i class="fas fa-redo"></i> تلقائي</button>
+        <button id="tripleStrikeBtn"><i class="fas fa-star"></i> ضربة ثلاثية</button>
+        <button id="hammerStrikeBtn"><i class="fas fa-hammer"></i> ضربة المطرقة</button>
+        <button id="resetBtn" class="admin-only" style="background-color: #f39c12;"><i class="fas fa-sync-alt"></i> إعادة تعيين اللعبة</button>
+    </div>
 
-            const autoPlayBtn = document.getElementById('autoPlayBtn');
+    <div id="messageDisplay" class="message" style="display: none;"></div>
+
+    <button id="toggleBtn" class="admin-only" style="display: none;"><i class="fas fa-cog"></i> إظهار الإعدادات</button>
+
+    <div id="settingsArea" class="admin-settings">
+        <h3>إعدادات المدير</h3>
+        <label for="maxScore">الحد الأقصى للنقاط للمستوى:</label>
+        <input type="number" id="maxScore" value="100">
+
+        <label for="maxLevel">الحد الأقصى للمستوى:</label>
+        <input type="number" id="maxLevel" value="5">
+
+        <label for="initialAttempts">المحاولات الأولية لكل مستوى:</label>
+        <input type="number" id="initialAttempts" value="3">
+
+        <button id="updateSettingsBtn"><i class="fas fa-save"></i> تحديث الإعدادات</button>
+        <div id="adminMessage" class="message" style="display: none;"></div>
+    </div>
+
+    <script>
+        const BACKEND_URL = 'https://voiceboom-wlxp.onrender.com';
+        let token = localStorage.getItem('token');
+        let isAdmin = localStorage.getItem('isAdmin') === 'true'; // تحويل السلسلة إلى قيمة منطقية
+        let playerUsername = localStorage.getItem('username'); // الحصول على اسم المستخدم
+
+        // العناصر الرئيسية في DOM
+        const usernameDisplay = document.getElementById('usernameDisplay');
+        const scoreDisplay = document.getElementById('scoreDisplay');
+        const levelDisplay = document.getElementById('levelDisplay');
+        const attemptsDisplay = document.getElementById('attemptsDisplay');
+        const messageDisplay = document.getElementById('messageDisplay');
+        const settingsArea = document.getElementById('settingsArea');
+        const toggleBtn = document.getElementById('toggleBtn');
+        const gameButtons = document.getElementById('gameButtons');
+
+        // عنصر شاشة التحميل (مهم)
+        const loadingOverlay = document.getElementById('loadingOverlay');
+
+        // وظائف إظهار/إخفاء الرسائل والتحميل
+        function showMessage(msg, type = 'info') {
+            messageDisplay.textContent = msg;
+            messageDisplay.className = `message ${type}`;
+            messageDisplay.style.display = 'block';
+        }
+
+        function hideMessage() {
+            messageDisplay.style.display = 'none';
+        }
+
+        function showLoadingOverlay() {
+            if (loadingOverlay) {
+                loadingOverlay.style.display = 'flex'; // أو 'block' حسب التصميم
+            }
+        }
+
+        function hideLoadingOverlay() {
+            if (loadingOverlay) {
+                loadingOverlay.style.display = 'none';
+            }
+        }
+
+        // تحديث إحصائيات اللاعب في الواجهة الأمامية
+        function updatePlayerStats(score, level, attempts) {
+            scoreDisplay.textContent = score;
+            levelDisplay.textContent = level;
+            attemptsDisplay.textContent = attempts;
+        }
+
+        // تحديث عرض اسم المستخدم
+        function updateUsernameDisplay(username) {
+            usernameDisplay.textContent = username;
+        }
+
+        // تحديث حالة أزرار اللعب (تفعيل/تعطيل)
+        function updateActionButtonsState() {
+            const autoBtn = document.getElementById('autoBtn');
             const tripleStrikeBtn = document.getElementById('tripleStrikeBtn');
             const hammerStrikeBtn = document.getElementById('hammerStrikeBtn');
-
-            const settingsToggleBtn = document.getElementById('settingsToggleBtn');
-            const settingsArea = document.getElementById('settingsArea');
-            const maxScoreInput = document.getElementById('maxScoreInput');
-            const maxLevelInput = document.getElementById('maxLevelInput');
-            const initialAttemptsInput = document.getElementById('initialAttemptsInput');
-            const saveSettingsBtn = document.getElementById('saveSettingsBtn');
-            const muteToggleBtn = document.getElementById('muteToggleBtn');
-            const backgroundMusic = document.getElementById('backgroundMusic');
-            const logoutBtn = document.getElementById('logoutBtn');
-            const adminDashboardLink = document.getElementById('adminDashboardLink');
-
-
-            // *** هذا هو السطر الذي تم تعديله ليربط الواجهة الخلفية المنشورة ***
-            const BACKEND_URL = 'https://voiceboom-wlxp.onrender.com';
-            // ************************************************************
-
-            let username = localStorage.getItem('username');
-            let token = localStorage.getItem('token');
-            let isAdmin = localStorage.getItem('isAdmin') === 'true'; // تحويلها إلى قيمة منطقية
-
-            // وظيفة لإظهار الرسائل
-            function showMessage(msg, type = 'info') {
-                messageDisplay.textContent = msg;
-                if (type === 'error') {
-                    messageDisplay.style.backgroundColor = 'rgba(231, 76, 60, 0.2)';
-                    messageDisplay.style.borderColor = 'rgba(231, 76, 60, 0.5)';
-                    messageDisplay.style.color = '#e74c3c';
-                } else if (type === 'success') {
-                    messageDisplay.style.backgroundColor = 'rgba(46, 204, 113, 0.2)';
-                    messageDisplay.style.borderColor = 'rgba(46, 204, 113, 0.5)';
-                    messageDisplay.style.color = '#2ecc71';
-                } else { // info
-                    messageDisplay.style.backgroundColor = 'rgba(26, 188, 156, 0.2)';
-                    messageDisplay.style.borderColor = 'rgba(26, 188, 156, 0.5)';
-                    messageDisplay.style.color = '#1abc9c';
-                }
+            
+            // تحويل النص إلى رقم للمقارنة
+            if (parseInt(attemptsDisplay.textContent) <= 0) {
+                autoBtn.disabled = true;
+                tripleStrikeBtn.disabled = true;
+                hammerStrikeBtn.disabled = true;
+                showMessage('انتهت محاولاتك! أعد اللعبة أو تواصل مع المدير.', 'warning');
+            } else {
+                autoBtn.disabled = false;
+                tripleStrikeBtn.disabled = false;
+                hammerStrikeBtn.disabled = false;
             }
+        }
 
-            // وظيفة تحديث حالة الأزرار
-            function updateActionButtonsState(enabled = true) {
-                autoPlayBtn.disabled = !enabled;
-                tripleStrikeBtn.disabled = !enabled;
-                hammerStrikeBtn.disabled = !enabled;
+        // إخفاء الأزرار للمستخدم العادي إذا لم يكن مديراً
+        function updateButtonVisibility() {
+            const adminSpecificButtons = document.querySelectorAll('.admin-only');
+            if (!isAdmin) {
+                adminSpecificButtons.forEach(btn => {
+                    btn.style.display = 'none';
+                });
             }
+        }
 
-            // وظيفة تحديث عرض الأزرار بناءً على صلاحيات المسؤول
-            function updateButtonVisibility() {
-                if (isAdmin) {
-                    settingsToggleBtn.style.display = 'block';
-                    adminDashboardLink.style.display = 'block'; // أظهر رابط لوحة تحكم المدير
+        // وظيفة معالجة إجراءات اللعبة (إرسال الطلب إلى الواجهة الخلفية)
+        async function performGameAction(actionType) {
+            showMessage('جارٍ المعالجة...', 'info'); // عرض رسالة التحميل
+            try {
+                const response = await fetch(`${BACKEND_URL}/api/user/action`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'x-auth-token': token
+                    },
+                    body: JSON.stringify({ action: actionType })
+                });
+
+                const data = await response.json(); // قراءة الاستجابة
+
+                if (response.ok) {
+                    updatePlayerStats(data.score, data.level, data.attempts);
+                    showMessage(data.message || 'تم تنفيذ الإجراء بنجاح.', 'success');
+                    updateActionButtonsState(); // تحديث حالة الأزرار بعد التحديث
                 } else {
-                    settingsToggleBtn.style.display = 'none';
-                    adminDashboardLink.style.display = 'none';
-                    settingsArea.style.display = 'none'; // تأكد من إخفائها لغير المديرين
+                    console.error('Error performing game action:', data.message || response.statusText);
+                    showMessage(data.message || 'خطأ في تنفيذ الإجراء. الرجاء المحاولة مجدداً.', 'error');
                 }
+            } catch (error) {
+                console.error('خطأ في الاتصال بالخادم أثناء تنفيذ الإجراء:', error);
+                showMessage('خطأ في الاتصال بالخادم أثناء تنفيذ الإجراء.', 'error');
             }
+        }
 
-            // جلب بيانات المستخدم وإعدادات اللعبة
-            async function fetchUserData() {
-                if (!token) {
-                    window.location.href = 'index.html'; // إعادة توجيه إذا لم يكن هناك توكن
-                    return;
-                }
+        // وظيفة تسجيل الخروج
+        function handleLogout() {
+            localStorage.removeItem('token');
+            localStorage.removeItem('isAdmin');
+            localStorage.removeItem('username');
+            window.location.href = 'index.html'; // العودة لصفحة تسجيل الدخول
+        }
 
+        // وظيفة إعادة تعيين اللعبة (تحتاج إلى مسار في الواجهة الخلفية لهذا الإجراء)
+        async function handleResetGame() {
+            if (confirm('هل أنت متأكد أنك تريد إعادة تعيين اللعبة؟ هذا سيعيد نقاطك ومحاولاتك.')) {
+                showMessage('جارٍ إعادة التعيين...', 'info');
                 try {
-                    const response = await fetch(`${BACKEND_URL}/api/user/data`, {
-                        method: 'GET',
-                        headers: {
-                            'Content-Type': 'application/json',
-                            'x-auth-token': token
-                        }
-                    });
-
-                    const data = await response.json();
-
-                    if (response.ok) {
-                        usernameDisplay.textContent = `اللاعب: ${data.username}`;
-                        scoreDisplay.textContent = `النقاط: ${data.score}`;
-                        levelDisplay.textContent = `المستوى: ${data.level}`;
-                        attemptsDisplay.textContent = `المحاولات: ${data.attempts}`;
-                        localStorage.setItem('isAdmin', data.isAdmin); // تحديث حالة المدير في localStorage
-                        isAdmin = data.isAdmin; // تحديث المتغير المحلي
-                        updateButtonVisibility(); // تحديث الأزرار بناءً على حالة المدير الجديدة
-                        getGameSettings(); // جلب إعدادات اللعبة بعد جلب بيانات المستخدم
-                    } else if (response.status === 401) {
-                        showMessage('انتهت صلاحية الجلسة أو غير مصرح. الرجاء تسجيل الدخول مرة أخرى.', 'error');
-                        setTimeout(() => {
-                            window.location.href = 'index.html';
-                        }, 2000);
-                    } else {
-                        showMessage(data.message || 'فشل جلب بيانات المستخدم.', 'error');
-                    }
-                } catch (error) {
-                    console.error('Error fetching user data:', error);
-                    showMessage('خطأ في الاتصال بالخادم. الرجاء المحاولة لاحقاً.', 'error');
-                    // قد ترغب في إعادة التوجيه إلى صفحة تسجيل الدخول حتى في حالة وجود خطأ في الاتصال
-                    // setTimeout(() => { window.location.href = 'index.html'; }, 3000);
-                }
-            }
-
-            // جلب إعدادات اللعبة (للمدير)
-            async function getGameSettings() {
-                if (!isAdmin) return; // فقط للمديرين
-
-                try {
-                    const response = await fetch(`${BACKEND_URL}/api/admin/settings`, {
-                        method: 'GET',
-                        headers: {
-                            'Content-Type': 'application/json',
-                            'x-auth-token': token
-                        }
-                    });
-
-                    const data = await response.json();
-
-                    if (response.ok) {
-                        maxScoreInput.value = data.maxScore;
-                        maxLevelInput.value = data.maxLevel;
-                        initialAttemptsInput.value = data.initialAttempts;
-                    } else {
-                        showMessage(data.message || 'فشل جلب إعدادات اللعبة.', 'error');
-                    }
-                } catch (error) {
-                    console.error('Error fetching game settings:', error);
-                    showMessage('خطأ في الاتصال بالخادم عند جلب الإعدادات.', 'error');
-                }
-            }
-
-            // تحديث إعدادات اللعبة (للمدير)
-            async function updateGameSettings() {
-                if (!isAdmin) {
-                    showMessage('ليس لديك صلاحية لتحديث الإعدادات.', 'error');
-                    return;
-                }
-
-                const newSettings = {
-                    maxScore: parseInt(maxScoreInput.value),
-                    maxLevel: parseInt(maxLevelInput.value),
-                    initialAttempts: parseInt(initialAttemptsInput.value)
-                };
-
-                try {
-                    const response = await fetch(`${BACKEND_URL}/api/admin/settings`, {
-                        method: 'PUT',
-                        headers: {
-                            'Content-Type': 'application/json',
-                            'x-auth-token': token
-                        },
-                        body: JSON.stringify(newSettings)
-                    });
-
-                    const data = await response.json();
-
-                    if (response.ok) {
-                        showMessage(data.message || 'تم حفظ الإعدادات بنجاح!', 'success');
-                    } else {
-                        showMessage(data.message || 'فشل حفظ الإعدادات.', 'error');
-                    }
-                } catch (error) {
-                    console.error('Error updating game settings:', error);
-                    showMessage('خطأ في الاتصال بالخادم عند حفظ الإعدادات.', 'error');
-                }
-            }
-
-            // وظيفة لمعالجة إجراءات اللعبة (مثل الضربات)
-            async function performGameAction(actionType) {
-                updateActionButtonsState(false); // تعطيل الأزرار أثناء الطلب
-                showMessage('جارٍ المعالجة...', 'info');
-
-                try {
-                    const response = await fetch(`${BACKEND_URL}/api/user/action`, {
+                    const response = await fetch(`${BACKEND_URL}/api/user/reset`, { // تأكد من وجود هذا المسار في user.js
                         method: 'POST',
                         headers: {
-                            'Content-Type': 'application/json',
                             'x-auth-token': token
-                        },
-                        body: JSON.stringify({ action: actionType })
+                        }
                     });
 
                     const data = await response.json();
 
                     if (response.ok) {
-                        scoreDisplay.textContent = `النقاط: ${data.score}`;
-                        levelDisplay.textContent = `المستوى: ${data.level}`;
-                        attemptsDisplay.textContent = `المحاولات: ${data.attempts}`;
-                        showMessage(data.message, 'success');
-
-                        // إذا انتهت المحاولات
-                        if (data.attempts <= 0 && data.message.includes('انتهت محاولاتك')) {
-                             setTimeout(() => {
-                                 showMessage('انتهت اللعبة! سيتم إعادة توجيهك إلى صفحة تسجيل الدخول.', 'error');
-                                 setTimeout(() => {
-                                     localStorage.clear(); // مسح التوكن وبيانات المستخدم
-                                     window.location.href = 'index.html';
-                                 }, 3000);
-                             }, 1000);
-                         }
-
-                    } else if (response.status === 401) {
-                        showMessage('انتهت صلاحية الجلسة أو غير مصرح. الرجاء تسجيل الدخول مرة أخرى.', 'error');
-                        setTimeout(() => {
-                            window.location.href = 'index.html';
-                        }, 2000);
+                        updatePlayerStats(data.score, data.level, data.attempts);
+                        showMessage(data.message || 'تم إعادة تعيين اللعبة بنجاح.', 'success');
+                        updateActionButtonsState();
                     } else {
-                        showMessage(data.message || 'حدث خطأ أثناء تنفيذ الإجراء.', 'error');
+                        console.error('Error resetting game:', data.message || response.statusText);
+                        showMessage(data.message || 'فشل إعادة تعيين اللعبة.', 'error');
                     }
                 } catch (error) {
-                    console.error('Error performing game action:', error);
-                    showMessage('خطأ في الاتصال بالخادم أثناء تنفيذ الإجراء.', 'error');
-                } finally {
-                    updateActionButtonsState(true); // تفعيل الأزرار بعد الانتهاء
+                    console.error('Network error during game reset:', error);
+                    showMessage('خطأ في الاتصال بالخادم أثناء إعادة تعيين اللعبة.', 'error');
                 }
             }
+        }
 
-            // وظيفة كتم/تشغيل الصوت
-            function toggleMute() {
-                if (backgroundMusic.paused) {
-                    backgroundMusic.play();
-                    muteToggleBtn.innerHTML = '<i class="fas fa-volume-up"></i> كتم الصوت';
-                } else {
-                    backgroundMusic.pause();
-                    muteToggleBtn.innerHTML = '<i class="fas fa-volume-mute"></i> تشغيل الصوت';
-                }
+        // وظيفة لكتم/إلغاء كتم الموسيقى
+        const backgroundMusic = document.getElementById('backgroundMusic');
+        const muteToggleBtn = document.getElementById('muteToggleBtn');
+        function toggleMute() {
+            if (backgroundMusic.muted) {
+                backgroundMusic.muted = false;
+                muteToggleBtn.innerHTML = '<i class="fas fa-volume-up"></i>';
+            } else {
+                backgroundMusic.muted = true;
+                muteToggleBtn.innerHTML = '<i class="fas fa-volume-mute"></i>';
             }
+        }
 
-            // وظيفة تسجيل الخروج
-            function logoutUser() {
-                localStorage.clear(); // مسح جميع البيانات من التخزين المحلي
-                window.location.href = 'index.html'; // إعادة التوجيه لصفحة تسجيل الدخول
-            }
+        // وظيفة تحديث الإعدادات (للمدير)
+        async function updateSettings() {
+            const maxScore = document.getElementById('maxScore').value;
+            const maxLevel = document.getElementById('maxLevel').value;
+            const initialAttempts = document.getElementById('initialAttempts').value;
+            const adminMessageDisplay = document.getElementById('adminMessage'); // رسالة خاصة بصفحة المدير
 
+            adminMessageDisplay.style.display = 'none'; // إخفاء الرسالة القديمة
+            adminMessageDisplay.textContent = '';
 
-            // تهيئة اللعبة عند التحميل
-            if (token) {
-                backgroundMusic.play().catch(e => console.log("Music play blocked:", e)); // حاول تشغيل الموسيقى
-                fetchUserData(); // جلب بيانات المستخدم عند تحميل الصفحة
-                
-                autoPlayBtn.addEventListener('click', () => performGameAction('auto'));
-                tripleStrikeBtn.addEventListener('click', () => performGameAction('tripleStrike'));
-                hammerStrikeBtn.addEventListener('click', () => performGameAction('hammerStrike'));
-                logoutBtn.addEventListener('click', logoutUser);
-                adminDashboardLink.addEventListener('click', () => {
-                    // يمكنك إعادة توجيه المدير إلى لوحة التحكم الخاصة به هنا
-                    // For now, it just shows a message or can go to a dedicated admin page
-                    showMessage('الضغط على لوحة تحكم المدير! (هذه ميزة قيد التطوير)', 'info');
-                    // window.location.href = 'admin_dashboard.html'; // مثال
+            try {
+                const response = await fetch(`${BACKEND_URL}/api/admin/settings`, { // تأكد من وجود هذا المسار
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'x-auth-token': token
+                    },
+                    body: JSON.stringify({ maxScore: parseInt(maxScore), maxLevel: parseInt(maxLevel), initialAttempts: parseInt(initialAttempts) })
                 });
 
-                saveSettingsBtn.addEventListener('click', updateGameSettings);
-                muteToggleBtn.addEventListener('click', toggleMute);
+                const data = await response.json();
 
-                // منطق إظهار/إخفاء إعدادات المدير
-                settingsToggleBtn.addEventListener('click', () => {
-                    if (settingsArea.style.display === 'none') {
-                        settingsArea.style.display = 'block';
-                        settingsToggleBtn.innerHTML = '<i class="fas fa-eye-slash"></i> إخفاء الإعدادات';
-                    } else {
-                        settingsArea.style.display = 'none';
-                        settingsToggleBtn.innerHTML = '<i class="fas fa-cog"></i> إظهار الإعدادات';
+                adminMessageDisplay.style.display = 'block';
+                if (response.ok) {
+                    adminMessageDisplay.className = 'message success';
+                    adminMessageDisplay.textContent = data.message || 'تم تحديث الإعدادات بنجاح.';
+                } else {
+                    adminMessageDisplay.className = 'message error';
+                    adminMessageDisplay.textContent = data.message || 'فشل تحديث الإعدادات.';
+                }
+            } catch (error) {
+                console.error('Error updating settings:', error);
+                adminMessageDisplay.style.display = 'block';
+                adminMessageDisplay.className = 'message error';
+                adminMessageDisplay.textContent = 'خطأ في الاتصال بالخادم أثناء تحديث الإعدادات.';
+            }
+        }
+
+        // عند تحميل محتوى DOM بالكامل
+        document.addEventListener('DOMContentLoaded', async () => {
+            showLoadingOverlay(); // ***** مهم: إظهار شاشة التحميل أولاً *****
+
+            if (!token) {
+                window.location.href = 'index.html';
+                return;
+            }
+
+            try {
+                const response = await fetch(`${BACKEND_URL}/api/user/data`, {
+                    method: 'GET',
+                    headers: {
+                        'x-auth-token': token
                     }
                 });
 
-            } else {
-                window.location.href = 'index.html'; // إعادة توجيه إذا لم يكن هناك توكن
+                if (response.ok) {
+                    const data = await response.json();
+                    console.log("بيانات المستخدم المستلمة:", data); // **** هذا السطر سيعرض البيانات في الكونسول ****
+
+                    // تحديث واجهة المستخدم بالبيانات المستلمة
+                    updatePlayerStats(data.score, data.level, data.attempts);
+                    updateUsernameDisplay(data.username);
+
+                    // ***** مهم: إخفاء شاشة التحميل بعد تحميل البيانات *****
+                    hideLoadingOverlay();
+                    // ثم عرض الرسالة الأولية للعبة
+                    showMessage('اضغط "تلقائي" أو "ضربة ثلاثية" أو "ضربة المطرقة" للكشف عن النقاط!');
+
+                    // تحديث حالة الأزرار وعرض لوحة المدير إذا كان المستخدم مديراً
+                    if (isAdmin) {
+                        toggleBtn.style.display = 'block';
+                        settingsArea.style.display = 'none'; // تبقى مخفية في البداية
+                        toggleBtn.innerHTML = '<i class="fas fa-cog"></i> إظهار الإعدادات';
+                        
+                        // إضافة مستمع الحدث لزر تبديل الإعدادات
+                        toggleBtn.addEventListener('click', () => {
+                            if (settingsArea.style.display === 'none') {
+                                settingsArea.style.display = 'flex'; // تغيير إلى flex ليعرض كعمود
+                                toggleBtn.innerHTML = '<i class="fas fa-eye-slash"></i> إخفاء الإعدادات';
+                            } else {
+                                settingsArea.style.display = 'none';
+                                toggleBtn.innerHTML = '<i class="fas fa-cog"></i> إظهار الإعدادات';
+                            }
+                        });
+                        
+                        // تحميل إعدادات المدير الحالية
+                        await loadAdminSettings(); // استدعاء وظيفة لتحميل الإعدادات
+                    } else {
+                        toggleBtn.style.display = 'none';
+                        settingsArea.style.display = 'none';
+                    }
+                    updateButtonVisibility();
+                    updateActionButtonsState();
+
+                } else {
+                    // في حالة الفشل، حاول قراءة الخطأ من الاستجابة وأظهر رسالة
+                    const errorData = await response.json().catch(() => ({ message: 'رسالة خطأ غير معروفة' })); // قراءة JSON أو افتراضي
+                    console.error('فشل تحميل بيانات المستخدم:', errorData.message || response.statusText);
+                    showMessage(errorData.message || 'فشل تحميل بيانات المستخدم. الرجاء تسجيل الدخول مجدداً.', 'error');
+                    hideLoadingOverlay(); // ***** مهم: إخفاء التحميل حتى لو فشل *****
+                    window.location.href = 'index.html'; // توجيه إلى صفحة تسجيل الدخول
+                }
+            } catch (error) {
+                // في حالة خطأ في الشبكة (لا يوجد اتصال بالخادم)
+                console.error('خطأ في الشبكة أثناء جلب بيانات المستخدم:', error);
+                showMessage('خطأ في الاتصال بالخادم. الرجاء المحاولة لاحقاً.', 'error');
+                hideLoadingOverlay(); // ***** مهم: إخفاء التحميل حتى لو حدث خطأ في الشبكة *****
+                window.location.href = 'index.html'; // توجيه إلى صفحة تسجيل الدخول
             }
+
+            // ربط مستمعي الأحداث لأزرار اللعب والإدارة
+            document.getElementById('autoBtn').addEventListener('click', () => performGameAction('auto'));
+            document.getElementById('tripleStrikeBtn').addEventListener('click', () => performGameAction('tripleStrike'));
+            document.getElementById('hammerStrikeBtn').addEventListener('click', () => performGameAction('hammerStrike'));
+            document.getElementById('logoutBtn').addEventListener('click', handleLogout);
+            document.getElementById('resetBtn').addEventListener('click', handleResetGame); 
+            document.getElementById('muteToggleBtn').addEventListener('click', toggleMute);
+            
+            // زر تحديث الإعدادات للمدير
+            const updateSettingsBtn = document.getElementById('updateSettingsBtn');
+            if (updateSettingsBtn) {
+                updateSettingsBtn.addEventListener('click', updateSettings);
+            }
+            
+            // تشغيل الموسيقى بعد تفاعل المستخدم
+            backgroundMusic.play().catch(e => console.log("خطأ في تشغيل الموسيقى:", e));
         });
+
+        // وظيفة لتحميل إعدادات المدير الحالية
+        async function loadAdminSettings() {
+            const adminMessageDisplay = document.getElementById('adminMessage');
+            adminMessageDisplay.style.display = 'none';
+
+            try {
+                const response = await fetch(`${BACKEND_URL}/api/admin/settings`, { // تأكد من وجود هذا المسار في admin.js
+                    method: 'GET',
+                    headers: {
+                        'x-auth-token': token
+                    }
+                });
+
+                const data = await response.json();
+
+                if (response.ok) {
+                    document.getElementById('maxScore').value = data.maxScore;
+                    document.getElementById('maxLevel').value = data.maxLevel;
+                    document.getElementById('initialAttempts').value = data.initialAttempts;
+                } else {
+                    console.error('فشل تحميل إعدادات المدير:', data.message || response.statusText);
+                    adminMessageDisplay.style.display = 'block';
+                    adminMessageDisplay.className = 'message error';
+                    adminMessageDisplay.textContent = data.message || 'فشل تحميل إعدادات المدير.';
+                }
+            } catch (error) {
+                console.error('خطأ في الشبكة أثناء تحميل إعدادات المدير:', error);
+                adminMessageDisplay.style.display = 'block';
+                adminMessageDisplay.className = 'message error';
+                adminMessageDisplay.textContent = 'خطأ في الاتصال بالخادم أثناء تحميل إعدادات المدير.';
+            }
+        }
     </script>
 </body>
 </html>

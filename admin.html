@@ -1,0 +1,501 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>لوحة التحكم - المدير</title>
+    <link rel="stylesheet" href="style.css"> <style>
+        /* يمكنك إضافة بعض الأنماط الأساسية هنا أو في ملف style.css */
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f4;
+            margin: 0;
+            padding: 20px;
+            text-align: center;
+        }
+        .container {
+            background-color: #fff;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            max-width: 900px;
+            margin: 20px auto;
+        }
+        h1, h2 {
+            color: #333;
+        }
+        .section {
+            margin-bottom: 30px;
+            border: 1px solid #ddd;
+            padding: 15px;
+            border-radius: 5px;
+            text-align: right; /* لمحاذاة النص داخل الأقسام لليمين */
+        }
+        .user-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 10px 0;
+            border-bottom: 1px dashed #eee;
+        }
+        .user-item:last-child {
+            border-bottom: none;
+        }
+        .user-item div {
+            flex: 1;
+            padding: 0 5px;
+        }
+        .user-item button, .section button {
+            background-color: #007bff;
+            color: white;
+            border: none;
+            padding: 8px 12px;
+            border-radius: 4px;
+            cursor: pointer;
+            margin-left: 10px; /* مسافة بين الأزرار */
+        }
+        .user-item button.delete-btn {
+            background-color: #dc3545;
+        }
+        .user-item button:hover, .section button:hover {
+            opacity: 0.9;
+        }
+        input[type="number"], input[type="text"], input[type="email"] {
+            width: calc(100% - 22px);
+            padding: 8px;
+            margin-top: 5px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+        }
+        .form-group {
+            margin-bottom: 15px;
+        }
+        label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: bold;
+        }
+        .back-link {
+            display: block;
+            margin-bottom: 20px;
+            text-decoration: none;
+            color: #007bff;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>لوحة تحكم المدير</h1>
+        <a href="game.html" class="back-link">العودة إلى اللعبة</a>
+        <button onclick="logout()">تسجيل الخروج</button>
+
+        <div class="section">
+            <h2>إدارة المستخدمين</h2>
+            <div id="usersList">
+                <p>جاري تحميل المستخدمين...</p>
+            </div>
+            <h3>تعديل مستخدم (بالاسم)</h3>
+            <div class="form-group">
+                <label for="editUsername">اسم المستخدم:</label>
+                <input type="text" id="editUsername" placeholder="ادخل اسم المستخدم">
+                <button onclick="searchUserForEdit()">بحث</button>
+            </div>
+            <div id="editUserForm" style="display:none;">
+                <input type="hidden" id="editUserId">
+                <div class="form-group">
+                    <label for="editPlayerCoins">العملات:</label>
+                    <input type="number" id="editPlayerCoins">
+                </div>
+                <div class="form-group">
+                    <label for="editLuckyPoints">نقاط الحظ:</label>
+                    <input type="number" id="editLuckyPoints">
+                </div>
+                <div class="form-group">
+                    <label for="editRoundsPlayed">الجولات الملعوبة:</label>
+                    <input type="number" id="editRoundsPlayed">
+                </div>
+                <div class="form-group">
+                    <label>
+                        <input type="checkbox" id="editIsAdmin">
+                        مدير؟
+                    </label>
+                </div>
+                <button onclick="updateUser()">حفظ التغييرات</button>
+                <button class="delete-btn" onclick="deleteUserPrompt()">حذف المستخدم</button>
+            </div>
+        </div>
+
+        <div class="section">
+            <h2>إعدادات اللعبة</h2>
+            <div id="gameSettingsForm">
+                <p>جاري تحميل الإعدادات...</p>
+            </div>
+            <button onclick="saveGameSettings()">حفظ إعدادات اللعبة</button>
+        </div>
+
+        <div class="section">
+            <h2>إعدادات الأصوات والخلفيات</h2>
+            <p>**ملاحظة:** هذه الوظيفة تتطلب تعديل نموذج "Setting" في الواجهة الخلفية لإضافة حقول لها أولاً.</p>
+            <div id="mediaSettingsForm">
+                <div class="form-group">
+                    <label for="backgroundUrl">رابط الخلفية (URL):</label>
+                    <input type="text" id="backgroundUrl" placeholder="مثال: images/new_background.jpg">
+                </div>
+                <div class="form-group">
+                    <label for="soundUrl">رابط صوت اللعبة (URL):</label>
+                    <input type="text" id="soundUrl" placeholder="مثال: sounds/new_sound.mp3">
+                </div>
+            </div>
+            <button onclick="saveMediaSettings()">حفظ إعدادات الأصوات والخلفيات</button>
+        </div>
+    </div>
+
+    <script>
+        const backendUrl = 'https://voiceboom-wlxp.onrender.com'; // تأكد من هذا الرابط
+        let allUsers = []; // لتخزين قائمة المستخدمين محلياً
+
+        // دالة تسجيل الخروج
+        function logout() {
+            localStorage.removeItem('token');
+            window.location.href = 'index.html';
+        }
+
+        // ----------------------------------------------------
+        // وظائف التحقق من صلاحيات المدير عند تحميل الصفحة
+        // ----------------------------------------------------
+        async function checkAdminStatus() {
+            const token = localStorage.getItem('token');
+            if (!token) {
+                alert('الرجاء تسجيل الدخول.');
+                window.location.href = 'index.html';
+                return;
+            }
+
+            try {
+                const response = await fetch(`${backendUrl}/api/user/data`, {
+                    method: 'GET',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'x-auth-token': token
+                    }
+                });
+                const data = await response.json();
+
+                if (response.ok && data.isAdmin) {
+                    // إذا كان مديراً، جلب بيانات المستخدمين وإعدادات اللعبة
+                    fetchUsers();
+                    fetchGameSettings();
+                } else {
+                    // ليس مديراً، إعادة توجيه
+                    alert('وصول ممنوع: أنت لست مديراً.');
+                    window.location.href = 'game.html';
+                }
+            } catch (error) {
+                console.error('Error checking admin status:', error);
+                alert('حدث خطأ أثناء التحقق من صلاحيات المدير. الرجاء تسجيل الدخول مرة أخرى.');
+                window.location.href = 'index.html';
+            }
+        }
+
+        // ----------------------------------------------------
+        // وظائف إدارة المستخدمين
+        // ----------------------------------------------------
+        async function fetchUsers() {
+            const token = localStorage.getItem('token');
+            try {
+                const response = await fetch(`${backendUrl}/api/admin/users`, {
+                    headers: { 'x-auth-token': token }
+                });
+                const users = await response.json();
+
+                if (response.ok) {
+                    allUsers = users; // تخزين المستخدمين
+                    displayUsers(users);
+                } else {
+                    alert('فشل في جلب المستخدمين: ' + users.message);
+                }
+            } catch (error) {
+                console.error('Error fetching users:', error);
+                alert('خطأ في الاتصال بالسيرفر لجلب المستخدمين.');
+            }
+        }
+
+        function displayUsers(users) {
+            const usersListDiv = document.getElementById('usersList');
+            usersListDiv.innerHTML = '<h3>قائمة المستخدمين:</h3>';
+            if (users.length === 0) {
+                usersListDiv.innerHTML += '<p>لا يوجد مستخدمون حالياً.</p>';
+                return;
+            }
+
+            users.forEach(user => {
+                const userItem = document.createElement('div');
+                userItem.className = 'user-item';
+                userItem.innerHTML = `
+                    <div><strong>${user.username}</strong> (${user.email})</div>
+                    <div>عملات: ${user.playerCoins}</div>
+                    <div>نقاط حظ: ${user.luckyPoints}</div>
+                    <div>جولات: ${user.roundsPlayed}</div>
+                    <div>مدير: ${user.isAdmin ? 'نعم' : 'لا'}</div>
+                    <button onclick="populateEditUserForm('${user._id}')">تعديل</button>
+                    <button class="delete-btn" onclick="deleteUserPrompt('${user._id}', '${user.username}')">حذف</button>
+                `;
+                usersListDiv.appendChild(userItem);
+            });
+        }
+
+        function searchUserForEdit() {
+            const usernameToFind = document.getElementById('editUsername').value.trim();
+            if (!usernameToFind) {
+                alert('الرجاء إدخال اسم المستخدم للبحث.');
+                return;
+            }
+            const userToEdit = allUsers.find(u => u.username === usernameToFind);
+            if (userToEdit) {
+                populateEditUserForm(userToEdit._id);
+            } else {
+                alert('المستخدم غير موجود.');
+                document.getElementById('editUserForm').style.display = 'none';
+            }
+        }
+
+        function populateEditUserForm(userId) {
+            const user = allUsers.find(u => u._id === userId);
+            if (user) {
+                document.getElementById('editUserId').value = user._id;
+                document.getElementById('editUsername').value = user.username; // لإظهار الاسم في حقل البحث
+                document.getElementById('editPlayerCoins').value = user.playerCoins;
+                document.getElementById('editLuckyPoints').value = user.luckyPoints;
+                document.getElementById('editRoundsPlayed').value = user.roundsPlayed;
+                document.getElementById('editIsAdmin').checked = user.isAdmin;
+                document.getElementById('editUserForm').style.display = 'block';
+            } else {
+                alert('لم يتم العثور على المستخدم للتعديل.');
+            }
+        }
+
+        async function updateUser() {
+            const userId = document.getElementById('editUserId').value;
+            const playerCoins = parseInt(document.getElementById('editPlayerCoins').value);
+            const luckyPoints = parseInt(document.getElementById('editLuckyPoints').value);
+            const roundsPlayed = parseInt(document.getElementById('editRoundsPlayed').value);
+            const isAdmin = document.getElementById('editIsAdmin').checked;
+            const username = document.getElementById('editUsername').value; // لجلب الاسم في حال تعديله
+
+            if (isNaN(playerCoins) || isNaN(luckyPoints) || isNaN(roundsPlayed)) {
+                alert('الرجاء إدخال قيم رقمية صحيحة للعملات والنقاط والجولات.');
+                return;
+            }
+
+            const token = localStorage.getItem('token');
+            try {
+                const response = await fetch(`${backendUrl}/api/admin/user/${userId}`, {
+                    method: 'PUT',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'x-auth-token': token
+                    },
+                    body: JSON.stringify({
+                        username, // في حال أردت إضافة تعديل الاسم أيضاً
+                        playerCoins,
+                        luckyPoints,
+                        roundsPlayed,
+                        isAdmin
+                    })
+                });
+                const result = await response.json();
+
+                if (response.ok) {
+                    alert(result.message);
+                    document.getElementById('editUserForm').style.display = 'none';
+                    fetchUsers(); // تحديث قائمة المستخدمين
+                } else {
+                    alert('فشل في تحديث المستخدم: ' + result.message);
+                }
+            } catch (error) {
+                console.error('Error updating user:', error);
+                alert('خطأ في الاتصال بالسيرفر أثناء تحديث المستخدم.');
+            }
+        }
+
+        function deleteUserPrompt(userId, username) {
+            if (confirm(`هل أنت متأكد أنك تريد حذف المستخدم ${username}؟`)) {
+                deleteUser(userId);
+            }
+        }
+
+        async function deleteUser(userId) {
+            const token = localStorage.getItem('token');
+            try {
+                const response = await fetch(`${backendUrl}/api/admin/user/${userId}`, {
+                    method: 'DELETE',
+                    headers: { 'x-auth-token': token }
+                });
+                const result = await response.json();
+
+                if (response.ok) {
+                    alert(result.message);
+                    fetchUsers(); // تحديث قائمة المستخدمين
+                } else {
+                    alert('فشل في حذف المستخدم: ' + result.message);
+                }
+            } catch (error) {
+                console.error('Error deleting user:', error);
+                alert('خطأ في الاتصال بالسيرفر أثناء حذف المستخدم.');
+            }
+        }
+
+        // ----------------------------------------------------
+        // وظائف إدارة إعدادات اللعبة
+        // ----------------------------------------------------
+        async function fetchGameSettings() {
+            const token = localStorage.getItem('token');
+            try {
+                const response = await fetch(`${backendUrl}/api/admin/settings`, {
+                    headers: { 'x-auth-token': token }
+                });
+                const settings = await response.json();
+
+                if (response.ok) {
+                    displayGameSettings(settings);
+                } else {
+                    alert('فشل في جلب إعدادات اللعبة: ' + settings.message);
+                }
+            } catch (error) {
+                console.error('Error fetching game settings:', error);
+                alert('خطأ في الاتصال بالسيرفر لجلب إعدادات اللعبة.');
+            }
+        }
+
+        function displayGameSettings(settings) {
+            const settingsFormDiv = document.getElementById('gameSettingsForm');
+            settingsFormDiv.innerHTML = `
+                <div class="form-group"><label for="basePrize">جائزة أساسية:</label><input type="number" id="basePrize" value="${settings.basePrize}"></div>
+                <div class="form-group"><label for="minAttempts">الحد الأدنى للمحاولات:</label><input type="number" id="minAttempts" value="${settings.minAttempts}"></div>
+                <div class="form-group"><label for="maxAttempts">الحد الأقصى للمحاولات:</label><input type="number" id="maxAttempts" value="${settings.maxAttempts}"></div>
+                <div class="form-group"><label for="levelUpBonus">مكافأة رفع المستوى:</label><input type="number" id="levelUpBonus" value="${settings.levelUpBonus}"></div>
+                <div class="form-group"><label for="maxScore">الحد الأقصى للنقاط:</label><input type="number" id="maxScore" value="${settings.maxScore}"></div>
+                <div class="form-group"><label for="maxLevel">الحد الأقصى للمستوى:</label><input type="number" id="maxLevel" value="${settings.maxLevel}"></div>
+                <div class="form-group"><label for="initialAttempts">المحاولات الأولية:</label><input type="number" id="initialAttempts" value="${settings.initialAttempts}"></div>
+                <div class="form-group"><label for="gameCost">تكلفة اللعبة:</label><input type="number" id="gameCost" value="${settings.gameCost}"></div>
+                <div class="form-group"><label for="autoPlayCost">تكلفة اللعب التلقائي:</label><input type="number" id="autoPlayCost" value="${settings.autoPlayCost}"></div>
+                <div class="form-group"><label for="tripleStrikeCost">تكلفة Triple Strike:</label><input type="number" id="tripleStrikeCost" value="${settings.tripleStrikeCost}"></div>
+                <div class="form-group"><label for="hammerStrikeCost">تكلفة Hammer Strike:</label><input type="number" id="hammerStrikeCost" value="${settings.hammerStrikeCost}"></div>
+            `;
+        }
+
+        async function saveGameSettings() {
+            const token = localStorage.getItem('token');
+            const settingsData = {
+                basePrize: parseInt(document.getElementById('basePrize').value),
+                minAttempts: parseInt(document.getElementById('minAttempts').value),
+                maxAttempts: parseInt(document.getElementById('maxAttempts').value),
+                levelUpBonus: parseInt(document.getElementById('levelUpBonus').value),
+                maxScore: parseInt(document.getElementById('maxScore').value),
+                maxLevel: parseInt(document.getElementById('maxLevel').value),
+                initialAttempts: parseInt(document.getElementById('initialAttempts').value),
+                gameCost: parseInt(document.getElementById('gameCost').value),
+                autoPlayCost: parseInt(document.getElementById('autoPlayCost').value),
+                tripleStrikeCost: parseInt(document.getElementById('tripleStrikeCost').value),
+                hammerStrikeCost: parseInt(document.getElementById('hammerStrikeCost').value)
+            };
+
+            try {
+                const response = await fetch(`${backendUrl}/api/admin/settings`, {
+                    method: 'PUT',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'x-auth-token': token
+                    },
+                    body: JSON.stringify(settingsData)
+                });
+                const result = await response.json();
+
+                if (response.ok) {
+                    alert(result.message);
+                } else {
+                    alert('فشل في حفظ الإعدادات: ' + result.message);
+                }
+            } catch (error) {
+                console.error('Error saving game settings:', error);
+                alert('خطأ في الاتصال بالسيرفر أثناء حفظ الإعدادات.');
+            }
+        }
+
+        // ----------------------------------------------------
+        // وظائف إدارة الأصوات والخلفيات (تتطلب تعديل نموذج Setting أولاً)
+        // ----------------------------------------------------
+        async function fetchMediaSettings() {
+            // ستحتاج لجلب الإعدادات مرة أخرى بعد إضافة حقول media إليها
+            // واستخدامها لملء حقول الإدخال هنا
+        }
+
+        async function saveMediaSettings() {
+            // **مهم:** هذه الدالة لن تعمل بشكل كامل حتى تقوم بتعديل نموذج Setting
+            // في الواجهة الخلفية backend/models/Setting.js لإضافة حقول مثل:
+            // currentBackgroundUrl: { type: String, default: 'images/default_background.jpg' },
+            // currentSoundUrl: { type: String, default: 'sounds/default_sound.mp3' },
+
+            // ثم تعديل مسار PUT /api/admin/settings في backend/routes/admin.js
+            // ليقبل ويحفظ هذه الحقول الجديدة
+
+            const token = localStorage.getItem('token');
+            const backgroundUrl = document.getElementById('backgroundUrl').value;
+            const soundUrl = document.getElementById('soundUrl').value;
+
+            // جمع البيانات مع إعدادات اللعبة الأخرى (إذا كنت تستخدم نفس المسار للتحديث)
+            const settingsData = {
+                // ... جميع حقول إعدادات اللعبة الأخرى التي تم جلبها
+                backgroundUrl: backgroundUrl,
+                soundUrl: soundUrl
+            };
+
+            try {
+                // قد تحتاج لجلب الإعدادات الحالية أولاً ودمجها مع التغييرات
+                const currentSettingsResponse = await fetch(`${backendUrl}/api/admin/settings`, {
+                    headers: { 'x-auth-token': token }
+                });
+                const currentSettings = await currentSettingsResponse.json();
+
+                if (!currentSettingsResponse.ok) {
+                    alert('فشل في جلب الإعدادات الحالية لحفظ الأصوات والخلفيات.');
+                    return;
+                }
+
+                // دمج الإعدادات القديمة مع الجديدة
+                const updatedSettings = {
+                    ...currentSettings,
+                    backgroundUrl: backgroundUrl,
+                    soundUrl: soundUrl
+                };
+
+                const response = await fetch(`${backendUrl}/api/admin/settings`, {
+                    method: 'PUT',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'x-auth-token': token
+                    },
+                    body: JSON.stringify(updatedSettings)
+                });
+                const result = await response.json();
+
+                if (response.ok) {
+                    alert(result.message);
+                    // ربما تحتاج لتحديث الواجهة الأمامية للعبة لتطبيق الخلفية/الصوت الجديد
+                } else {
+                    alert('فشل في حفظ إعدادات الأصوات والخلفيات: ' + result.message);
+                }
+            } catch (error) {
+                console.error('Error saving media settings:', error);
+                alert('خطأ في الاتصال بالسيرفر أثناء حفظ إعدادات الأصوات والخلفيات.');
+            }
+        }
+
+
+        // ----------------------------------------------------
+        // عند تحميل الصفحة
+        // ----------------------------------------------------
+        document.addEventListener('DOMContentLoaded', checkAdminStatus);
+    </script>
+</body>
+</html>
