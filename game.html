@@ -9,7 +9,7 @@
         :root {
             --primary-bg-color: #2c3e50; /* لون خلفية أساسي داكن */
             --secondary-color: #34495e; /* لون ثانوي أغمق قليلاً */
-            --accent-color-1: #e74c3c; /* أحمر جذاب للأزرار أو الرسائل */
+            --accent-color-1: #e74c3c; /* أحمر جذاب للأزرار أو الرسائل (مثل الأخطاء أو النقاط السالبة) */
             --accent-color-2: #2ecc71; /* أخضر للنجاح */
             --text-color-light: #ecf0f1; /* نص فاتح */
             --text-color-dark: #34495e; /* نص داكن */
@@ -31,7 +31,7 @@
             padding: 20px;
             box-sizing: border-box;
             text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.5);
-            overflow-x: hidden;
+            overflow-x: hidden; /* لمنع ظهور شريط التمرير الأفقي */
             position: relative;
             z-index: 0;
 
@@ -53,7 +53,7 @@
             width: 100%;
             height: 100%;
             background-color: rgba(0, 0, 0, 0.4); /* طبقة شفافة سوداء */
-            z-index: -1;
+            z-index: -1; /* للتأكد من أنها خلف المحتوى */
         }
 
         header {
@@ -68,10 +68,16 @@
             box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
             margin-bottom: 20px;
             animation: fadeInDown 0.8s ease-out;
+            flex-wrap: wrap; /* للسماح للعناصر بالانتقال إلى سطر جديد على الشاشات الصغيرة */
+        }
+
+        .user-info {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 15px; /* مسافة بين عناصر معلومات المستخدم */
         }
 
         .user-info span {
-            margin: 0 15px;
             font-size: 1.2em;
             font-weight: bold;
             color: var(--text-color-light);
@@ -84,8 +90,14 @@
             color: #f1c40f; /* لون ذهبي للأيقونات */
         }
 
+        .header-actions {
+            display: flex;
+            gap: 10px;
+            margin-right: auto; /* يدفع الأزرار إلى أقصى اليسار في RTL */
+        }
+
         #gameMessage {
-            background-color: var(--accent-color-1);
+            background-color: var(--accent-color-1); /* افتراضي للأخطاء أو رسائل التحذير */
             color: white;
             padding: 10px 20px;
             border-radius: 8px;
@@ -135,7 +147,7 @@
         }
 
         .game-box.revealed {
-            background-color: var(--accent-color-2); /* لون أخضر عند الكشف */
+            background-color: var(--accent-color-2); /* لون أخضر عند الكشف عن نقاط إيجابية */
             color: white;
             cursor: default;
             transform: scale(1.05); /* تكبير بسيط عند الكشف */
@@ -189,13 +201,13 @@
         }
 
         .action-button:hover:not(:disabled) {
-            background-color: #c0392b;
+            background-color: #c0392b; /* لون أحمر أغمق عند التحويم */
             transform: translateY(-3px);
             box-shadow: 0 6px 15px rgba(0, 0, 0, 0.3);
         }
 
         .action-button:disabled {
-            background-color: #7f8c8d;
+            background-color: #7f8c8d; /* لون رمادي عند التعطيل */
             cursor: not-allowed;
             opacity: 0.7;
         }
@@ -373,6 +385,12 @@
 
             .user-info {
                 margin-bottom: 10px;
+                justify-content: center;
+            }
+            .header-actions {
+                margin-right: 0; /* لإلغاء الدفع لليسار على الشاشات الصغيرة */
+                justify-content: center;
+                width: 100%;
             }
 
             .user-info span {
@@ -571,13 +589,17 @@
         let currentSettings = {}; // لتخزين الإعدادات الحالية من السيرفر
         let isMuted = false;
 
+        // *** هذا هو السطر الحاسم: عنوان الـ Backend API الخاص بك على Render ***
+        const API_BASE_URL = 'https://voiceboom-wlxp.onrender.com';
+
         // ----------------------------------------------------
         // وظائف الواجهة الأمامية (UI Functions)
         // ----------------------------------------------------
 
         function displayGameMessage(message, type = 'info') {
             gameMessage.textContent = message;
-            gameMessage.style.backgroundColor = type === 'error' ? '#e74c3c' : (type === 'success' ? '#2ecc71' : '#3498db');
+            // استخدام متغيرات CSS للألوان
+            gameMessage.style.backgroundColor = type === 'error' ? 'var(--accent-color-1)' : (type === 'success' ? 'var(--accent-color-2)' : 'var(--secondary-color)');
             gameMessage.style.display = 'block';
         }
 
@@ -587,7 +609,7 @@
         }
 
         function updateUI(data) {
-            usernameDisplay.textContent = data.username || 'غير معروف';
+            usernameDisplay.textContent = `اللاعب: ${data.username || 'غير معروف'}`;
             playerCoinsDisplay.textContent = data.playerCoins || 0;
             luckyPointsDisplay.textContent = data.luckyPoints || 0;
             roundsPlayedDisplay.textContent = data.roundsPlayed || 0;
@@ -625,8 +647,8 @@
             if (isNegative) {
                 boxElement.classList.add('negative');
             }
-            revealSound.currentTime = 0;
-            revealSound.play();
+            revealSound.currentTime = 0; // إعادة الصوت من البداية
+            revealSound.play().catch(e => console.error("Error playing reveal sound:", e));
         }
 
         function updateButtonVisibility() {
@@ -657,19 +679,20 @@
         async function fetchUserDataAndSettings() {
             const token = localStorage.getItem('token');
             if (!token) {
+                console.log("No token found, redirecting to index.html");
                 window.location.href = 'index.html'; // إعادة توجيه إذا لم يكن هناك رمز
                 return;
             }
 
             try {
                 // جلب بيانات المستخدم
-                const userResponse = await fetch('/api/user/data', {
+                const userResponse = await fetch(`${API_BASE_URL}/api/user/data`, { // تم التعديل
                     headers: { 'Authorization': `Bearer ${token}` }
                 });
                 const userData = await userResponse.json();
 
                 // جلب إعدادات اللعبة
-                const settingsResponse = await fetch('/api/admin/settings', {
+                const settingsResponse = await fetch(`${API_BASE_URL}/api/admin/settings`, { // تم التعديل
                     headers: { 'Authorization': `Bearer ${token}` }
                 });
                 const settingsData = await settingsResponse.json();
@@ -690,28 +713,34 @@
                     // إظهار زر الإعدادات للمشرف فقط
                     if (isAdmin) {
                         toggleSettingsBtn.style.display = 'block';
-                        // تحديث نص زر الإعدادات بناءً على الحالة الأولية
                         settingsArea.style.display = 'none'; // تأكد أنها مخفية في البداية
                         toggleSettingsBtn.innerHTML = '<i class="fas fa-cog"></i> إظهار الإعدادات';
-                        showMessage('اضغط "تلقائي" أو "ضربة ثلاثية" أو "ضربة المطرقة" للكشف عن النقاط!');
                     } else {
                         toggleSettingsBtn.style.display = 'none';
                         settingsArea.style.display = 'none';
-                        showMessage('اضغط "تلقائي" أو "ضربة ثلاثية" أو "ضربة المطرقة" للكشف عن النقاط!');
                     }
+                    displayGameMessage('اضغط "تلقائي" أو "ضربة ثلاثية" أو "ضربة المطرقة" للكشف عن النقاط!', 'info');
+
 
                     updateButtonVisibility();
                     updateActionButtonsState();
 
                 } else {
                     // إذا كان هناك خطأ في أي من الطلبين
+                    console.error('Failed to fetch user data or settings:', userData.message, settingsData.message);
                     displayGameMessage(userData.message || settingsData.message || 'فشل في جلب البيانات', 'error');
-                    window.location.href = 'index.html'; // إعادة توجيه إذا لم يكن هناك رمز
+                    // إعادة توجيه فقط إذا كان الخطأ يدل على عدم المصادقة
+                    if (userResponse.status === 401 || settingsResponse.status === 401) {
+                         console.log("Authentication failed, redirecting to index.html");
+                         window.location.href = 'index.html';
+                    }
                 }
             } catch (error) {
-                console.error('Error fetching user data or settings:', error);
-                displayGameMessage('حدث خطأ في الاتصال بالخادم.', 'error');
-                window.location.href = 'index.html'; // إعادة توجيه إذا كان هناك خطأ
+                console.error('Error fetching user data or settings (network error/server down):', error);
+                displayGameMessage('حدث خطأ في الاتصال بالخادم. تأكد من أن الخادم يعمل.', 'error');
+                // في حالة وجود خطأ في الشبكة (مثلاً، الخادم لا يعمل)، يجب إعادة التوجيه
+                console.log("Network error, redirecting to index.html");
+                window.location.href = 'index.html';
             }
         }
 
@@ -719,11 +748,13 @@
             const token = localStorage.getItem('token');
             if (!token) {
                 displayGameMessage('الرجاء تسجيل الدخول أولاً.', 'error');
+                console.log("No token found for game action, redirecting to index.html");
+                window.location.href = 'index.html';
                 return;
             }
 
             try {
-                const response = await fetch(`/api/user/${actionType}`, {
+                const response = await fetch(`${API_BASE_URL}/api/user/${actionType}`, { // تم التعديل
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json',
@@ -749,6 +780,11 @@
                     displayGameMessage(result.message, 'success');
                 } else {
                     displayGameMessage(result.message, 'error');
+                     if (response.status === 401) { // إذا كان التوكن غير صالح
+                        console.log("Token invalid for game action, redirecting to index.html");
+                        localStorage.removeItem('token'); // مسح التوكن الفاسد
+                        window.location.href = 'index.html';
+                    }
                 }
             } catch (error) {
                 console.error(`Error performing ${actionType}:`, error);
@@ -767,6 +803,8 @@
             const token = localStorage.getItem('token');
             if (!token) {
                 displayGameMessage('الرجاء تسجيل الدخول كمسؤول لحفظ الإعدادات.', 'error');
+                console.log("No token found for save settings, redirecting to index.html");
+                window.location.href = 'index.html';
                 return;
             }
 
@@ -792,7 +830,7 @@
             };
 
             try {
-                const response = await fetch('/api/admin/settings', {
+                const response = await fetch(`${API_BASE_URL}/api/admin/settings`, { // تم التعديل
                     method: 'PUT',
                     headers: {
                         'Content-Type': 'application/json',
@@ -810,6 +848,11 @@
                     createGameBoxes(currentSettings.numBoxes || 10); // إعادة إنشاء الصناديق إذا تغير العدد
                 } else {
                     displayGameMessage(result.message, 'error');
+                    if (response.status === 401) { // إذا كان التوكن غير صالح
+                        console.log("Token invalid for save settings, redirecting to index.html");
+                        localStorage.removeItem('token');
+                        window.location.href = 'index.html';
+                    }
                 }
             } catch (error) {
                 console.error('Error saving settings:', error);
@@ -825,11 +868,13 @@
             const token = localStorage.getItem('token');
             if (!token) {
                 displayGameMessage('الرجاء تسجيل الدخول كمسؤول لإعادة تعيين اللعبة.', 'error');
+                console.log("No token found for reset game, redirecting to index.html");
+                window.location.href = 'index.html';
                 return;
             }
 
             try {
-                const response = await fetch('/api/admin/reset-game', {
+                const response = await fetch(`${API_BASE_URL}/api/admin/reset-game`, { // تم التعديل
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json',
@@ -844,6 +889,11 @@
                     fetchUserDataAndSettings();
                 } else {
                     displayGameMessage(result.message, 'error');
+                     if (response.status === 401) { // إذا كان التوكن غير صالح
+                        console.log("Token invalid for reset game, redirecting to index.html");
+                        localStorage.removeItem('token');
+                        window.location.href = 'index.html';
+                    }
                 }
             } catch (error) {
                 console.error('Error resetting game:', error);
@@ -853,23 +903,23 @@
 
         // وظيفة لملء حقول الإعدادات من البيانات المستلمة
         function populateSettingsForm(settings) {
-            document.getElementById('numBoxes').value = settings.numBoxes;
-            document.getElementById('num10PointsBoxes').value = settings.num10PointsBoxes;
-            document.getElementById('num5PointsBoxes').value = settings.num5PointsBoxes;
-            document.getElementById('num1PointsBoxes').value = settings.num1PointsBoxes;
-            document.getElementById('numNegative5PointsBoxes').value = settings.numNegative5PointsBoxes;
-            document.getElementById('numNegative10PointsBoxes').value = settings.numNegative10PointsBoxes;
-            document.getElementById('initialCoins').value = settings.initialCoins;
-            document.getElementById('autoPlayCost').value = settings.autoPlayCost;
-            document.getElementById('autoPlayMaxPrize').value = settings.autoPlayMaxPrize;
-            document.getElementById('tripleStrikeCost').value = settings.tripleStrikeCost;
-            document.getElementById('tripleStrikeMaxPrize').value = settings.tripleStrikeMaxPrize;
-            document.getElementById('tripleStrikeLuckyChance').value = settings.tripleStrikeLuckyChance;
-            document.getElementById('tripleHitPoints').value = settings.tripleHitPoints;
-            document.getElementById('hammerStrikeCost').value = settings.hammerStrikeCost;
-            document.getElementById('hammerHitPoints').value = settings.hammerHitPoints;
-            document.getElementById('backgroundImgUrl').value = settings.backgroundImg;
-            document.getElementById('audioPathUrl').value = settings.audioPath;
+            document.getElementById('numBoxes').value = settings.numBoxes || '';
+            document.getElementById('num10PointsBoxes').value = settings.num10PointsBoxes || '';
+            document.getElementById('num5PointsBoxes').value = settings.num5PointsBoxes || '';
+            document.getElementById('num1PointsBoxes').value = settings.num1PointsBoxes || '';
+            document.getElementById('numNegative5PointsBoxes').value = settings.numNegative5PointsBoxes || '';
+            document.getElementById('numNegative10PointsBoxes').value = settings.numNegative10PointsBoxes || '';
+            document.getElementById('initialCoins').value = settings.initialCoins || '';
+            document.getElementById('autoPlayCost').value = settings.autoPlayCost || '';
+            document.getElementById('autoPlayMaxPrize').value = settings.autoPlayMaxPrize || '';
+            document.getElementById('tripleStrikeCost').value = settings.tripleStrikeCost || '';
+            document.getElementById('tripleStrikeMaxPrize').value = settings.tripleStrikeMaxPrize || '';
+            document.getElementById('tripleStrikeLuckyChance').value = settings.tripleStrikeLuckyChance || '';
+            document.getElementById('tripleHitPoints').value = settings.tripleHitPoints || '';
+            document.getElementById('hammerStrikeCost').value = settings.hammerStrikeCost || '';
+            document.getElementById('hammerHitPoints').value = settings.hammerHitPoints || '';
+            document.getElementById('backgroundImgUrl').value = settings.backgroundImg || 'default_background.jpg'; // قيمة افتراضية في الواجهة
+            document.getElementById('audioPathUrl').value = settings.audioPath || 'background_music.mp3'; // قيمة افتراضية في الواجهة
         }
 
         // وظيفة لتطبيق إعدادات التصميم (الخلفية والصوت)
@@ -885,8 +935,12 @@
             // تطبيق صوت الخلفية
             if (settings.audioPath) {
                 backgroundMusic.src = settings.audioPath;
+                // محاولة تشغيل الصوت فوراً، مع التعامل مع قيود المتصفح
                 if (!isMuted) { // تشغيل الصوت فقط إذا لم يتم كتمه يدوياً
-                    backgroundMusic.play().catch(e => console.error("Error playing background music:", e));
+                    backgroundMusic.play().catch(e => {
+                        console.warn("User interaction required to play background music:", e);
+                        // يمكن هنا إظهار زر "تشغيل الصوت" للمستخدم إذا لم يتم التشغيل تلقائياً
+                    });
                 }
             } else {
                 backgroundMusic.pause();
@@ -906,10 +960,11 @@
             const savedMuteState = localStorage.getItem('isMuted');
             if (savedMuteState !== null) {
                 isMuted = JSON.parse(savedMuteState);
-                toggleMute(); // تطبيق الحالة المستعادة
+                toggleMute(); // تطبيق الحالة المستعادة (سيقوم بتحديث الأيقونة وكتم الصوت)
             } else {
-                // تشغيل الصوت لأول مرة إذا لم يتم حفظ حالة الكتم
-                backgroundMusic.play().catch(e => console.error("Initial background music play error:", e));
+                // محاولة تشغيل الصوت لأول مرة إذا لم يتم حفظ حالة الكتم
+                // هذا قد لا يعمل في بعض المتصفحات بدون تفاعل المستخدم
+                backgroundMusic.play().catch(e => console.warn("Initial background music play error, user interaction may be required:", e));
             }
         });
 
@@ -917,6 +972,21 @@
             localStorage.removeItem('token');
             window.location.href = 'index.html';
         });
+
+        gameContainer.addEventListener('click', (event) => {
+            // إذا كان المستخدم لا يزال قادراً على النقر على الصناديق الفردية
+            // هنا ستكون منطقتك لمعالجة النقر على الصندوق إذا كانت اللعبة تسمح بذلك
+            // حالياً، اللعبة تعتمد على الأزرار (تلقائي، ثلاثي، مطرقة)
+            // لذا، لن يتم معالجة النقر الفردي على الصناديق إلا إذا أضفت منطق لذلك
+            if (event.target.classList.contains('game-box') && !event.target.classList.contains('revealed')) {
+                // يمكنك هنا إضافة استدعاء لـ performGameAction مع نوع حركة "single-click" مثلاً
+                // أو أي منطق آخر لفتح صندوق واحد إذا سمحت بذلك قواعد اللعبة.
+                // حالياً، لا يوجد مسار API لـ "single-click" في الـ Backend الذي ناقشناه.
+                console.log("Box clicked:", event.target.dataset.index);
+                // displayGameMessage("هذا الصندوق تم كشفه تلقائياً أو عبر إجراء خاص. اضغط زر اللعب.", "info");
+            }
+        });
+
 
         autoPlayBtn.addEventListener('click', () => performGameAction('auto-play'));
         tripleStrikeBtn.addEventListener('click', () => performGameAction('triple-strike'));
@@ -938,7 +1008,7 @@
         muteToggleBtn.addEventListener('click', toggleMute);
 
         // إضافة صوت عند كشف الصندوق (مثال: يمكنك استخدام صوت نقرة أو صوت فتح صندوق)
-        revealSound.src = 'reveal_sound.mp3'; // تأكد من وجود هذا الملف
+        revealSound.src = 'reveal_sound.mp3'; // تأكد من وجود هذا الملف في مجلد الواجهة الأمامية
         revealSound.volume = 0.5; // ضبط مستوى الصوت
     </script>
 </body>
