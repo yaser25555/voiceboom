@@ -248,10 +248,10 @@
             // معالج حدث تسجيل الدخول
             if (loginButton) {
                 loginButton.addEventListener('click', async () => {
-                    const identifier = loginUsernameInput.value;
+                    const username = loginUsernameInput.value;
                     const password = loginPasswordInput.value;
 
-                    if (!identifier || !password) {
+                    if (!username || !password) {
                         loginErrorMessage.textContent = 'الرجاء إدخال اسم المستخدم/البريد الإلكتروني وكلمة المرور.';
                         return;
                     }
@@ -264,7 +264,7 @@
                             headers: {
                                 'Content-Type': 'application/json'
                             },
-                            body: JSON.stringify({ identifier, password })
+                            body: JSON.stringify({ username, password })
                         });
 
                         const data = await response.json();
