@@ -26,600 +26,380 @@
             background-size: cover;
             background-position: center;
             background-attachment: fixed;
-            background-repeat: no-repeat;
-            transition: background-image 0.5s ease-in-out;
+            transition: background-image 1s ease-in-out;
+        }
+
+        body::before {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.5); /* طبقة شفافة لتعتيم الخلفية */
+            z-index: -1;
         }
 
         .container {
-            background-color: rgba(0, 0, 0, 0.7);
-            padding: 30px;
+            background-color: rgba(26, 35, 126, 0.8); /* أزرق داكن شفاف */
+            padding: 30px 40px;
             border-radius: 15px;
-            box-shadow: 0 0 20px rgba(0, 255, 255, 0.5);
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
             text-align: center;
             max-width: 900px;
             width: 100%;
-            z-index: 1;
-            border: 2px solid cyan;
+            box-sizing: border-box;
             margin-top: 20px;
+            border: 2px solid #6200EA; /* حدود أرجوانية */
+            position: relative;
+        }
+
+        h1, h2, h3 {
+            color: #BB86FC; /* أرجواني فاتح للعناوين */
             margin-bottom: 20px;
+            font-family: 'Amiri', serif;
         }
 
-        h1, h2 {
-            color: #00FFFF;
-            margin-bottom: 15px;
-        }
-
-        .user-info, .game-area, .game-controls, .game-message-box, .logout-area {
-            background-color: rgba(0, 100, 100, 0.5);
-            padding: 15px;
+        .user-info, .game-controls, .game-messages, .game-area, .settings-area {
+            margin-bottom: 25px;
+            padding: 20px;
+            background-color: rgba(0, 0, 0, 0.4); /* خلفية أغمق قليلاً للأقسام */
             border-radius: 10px;
-            margin-bottom: 20px;
-            border: 1px solid #00FFFF;
-            box-shadow: inset 0 0 10px rgba(0, 255, 255, 0.3);
+            border: 1px solid rgba(187, 134, 252, 0.3);
         }
 
-        .user-info p {
-            margin: 5px 0;
+        .user-info p, .game-messages p {
             font-size: 1.1em;
-            color: #E0E0E0;
+            margin: 8px 0;
         }
 
-        .admin-panel-link {
-            display: none; /* يتم التحكم في إظهاره بواسطة JavaScript */
-            margin-top: 15px;
-            padding: 10px 20px;
-            background-color: #28a745;
-            color: white;
-            text-decoration: none;
-            border-radius: 8px;
-            font-size: 1.1em;
-            transition: background-color 0.3s ease;
+        .username {
+            font-size: 1.5em;
+            font-weight: bold;
+            color: #03DAC6; /* تركواز */
         }
 
-        .admin-panel-link:hover {
-            background-color: #218838;
-        }
-
-        .game-buttons button, .admin-buttons button, .action-buttons button {
-            background-color: #007BFF;
-            color: white;
+        .game-controls button, #saveSettingsBtn, #resetGameBtn, #muteToggleBtn {
+            background-color: #03DAC6; /* تركواز */
+            color: #121212;
             border: none;
             padding: 12px 25px;
             margin: 8px;
             border-radius: 8px;
-            cursor: pointer;
             font-size: 1.1em;
+            cursor: pointer;
             transition: background-color 0.3s ease, transform 0.2s ease;
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
         }
 
-        .game-buttons button:hover, .admin-buttons button:hover, .action-buttons button:hover {
-            background-color: #0056b3;
+        .game-controls button:hover, #saveSettingsBtn:hover, #resetGameBtn:hover, #muteToggleBtn:hover {
+            background-color: #018786; /* تركواز أغمق */
             transform: translateY(-2px);
         }
 
-        .game-buttons button:disabled {
-            background-color: #6c757d;
-            cursor: not-allowed;
-        }
-
-        .game-message-box {
+        .game-messages {
             min-height: 50px;
             display: flex;
             align-items: center;
             justify-content: center;
-            font-size: 1.3em;
-            font-weight: bold;
-            color: #FFD700; /* لون ذهبي للرسائل */
-            border: 2px dashed #00FFFF;
-            box-shadow: inset 0 0 15px rgba(255, 255, 0, 0.3);
-            text-shadow: 1px 1px 5px rgba(0, 255, 255, 0.7);
         }
 
-        .settings-area, .admin-section {
-            background-color: rgba(0, 50, 50, 0.6);
-            padding: 20px;
-            border-radius: 10px;
-            margin-top: 20px;
-            border: 1px solid #00FFFF;
-            box-shadow: inset 0 0 10px rgba(0, 255, 255, 0.2);
-            text-align: right;
-        }
+        .message.success { color: #03DAC6; }
+        .message.error { color: #CF6679; } /* أحمر فاتح للخطأ */
 
-        .settings-area label {
-            display: block;
-            margin-bottom: 8px;
-            color: #E0E0E0;
-            font-size: 1.1em;
-        }
-
-        .settings-area input[type="number"],
-        .settings-area input[type="text"],
-        .settings-area select {
-            width: calc(100% - 20px);
-            padding: 10px;
-            margin-bottom: 15px;
-            border-radius: 5px;
-            border: 1px solid #00FFFF;
-            background-color: rgba(0, 0, 0, 0.5);
-            color: #E0E0E0;
-            font-size: 1em;
-        }
-
-        .settings-area button {
-            background-color: #17a2b8; /* لون أزرق سماوي للإعدادات */
-        }
-
-        .settings-area button:hover {
-            background-color: #138496;
-        }
-
-        .admin-section h2 {
-            color: #00FFFF;
-            border-bottom: 1px solid #00FFFF;
-            padding-bottom: 10px;
-            margin-bottom: 20px;
-        }
-
-        .admin-section .user-list {
-            margin-top: 15px;
-            background-color: rgba(0, 0, 0, 0.3);
-            padding: 10px;
-            border-radius: 8px;
-            max-height: 300px;
-            overflow-y: auto;
-            border: 1px dashed #00FFFF;
-        }
-
-        .admin-section .user-item {
-            background-color: rgba(0, 200, 200, 0.1);
-            padding: 10px;
-            margin-bottom: 8px;
-            border-radius: 5px;
+        .game-area {
+            position: relative;
+            min-height: 200px;
             display: flex;
-            justify-content: space-between;
+            justify-content: center;
             align-items: center;
-            border: 1px solid rgba(0, 255, 255, 0.5);
+            flex-wrap: wrap;
+            gap: 15px;
         }
 
-        .admin-section .user-item span {
-            color: #E0E0E0;
-            flex-grow: 1;
-            text-align: right;
-        }
-
-        .admin-section .user-item button {
-            margin-right: 5px; /* Adjust margin for left-to-right alignment of buttons */
-            background-color: #ffc107; /* لون أصفر */
-            color: #333;
-            padding: 5px 10px;
-            font-size: 0.9em;
-        }
-
-        .admin-section .user-item button.delete-btn {
-            background-color: #dc3545; /* لون أحمر */
-            color: white;
-        }
-
-        .admin-section .user-item button:hover {
-            opacity: 0.8;
-        }
-        
-        .logout-btn {
-            background-color: #dc3545;
-            color: white;
-            border: none;
-            padding: 12px 25px;
-            margin-top: 20px;
-            border-radius: 8px;
+        .box {
+            width: 80px;
+            height: 80px;
+            background-color: #BB86FC; /* أرجواني فاتح */
+            border-radius: 10px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 2em;
+            font-weight: bold;
+            color: #121212;
             cursor: pointer;
-            font-size: 1.1em;
-            transition: background-color 0.3s ease, transform 0.2s ease;
+            transition: background-color 0.2s ease, transform 0.2s ease, opacity 0.2s ease;
             box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
         }
-        .logout-btn:hover {
-            background-color: #c82333;
+
+        .box:hover:not(.opened) {
+            background-color: #6200EA; /* أرجواني أغمق */
+            transform: translateY(-3px);
+        }
+
+        .box.opened {
+            cursor: default;
+            opacity: 0.7;
+        }
+
+        /* لقطة الشاشة والعد التنازلي */
+        #countdownOverlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.9);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            color: white;
+            font-size: 8em;
+            font-weight: bold;
+            z-index: 1000;
+            display: none; /* مخفي افتراضياً */
+        }
+
+        /* قسم الإعدادات */
+        .settings-area {
+            background-color: rgba(26, 35, 126, 0.9);
+            border: 2px solid #BB86FC;
+            padding: 25px;
+            border-radius: 15px;
+            text-align: right;
+            display: none; /* مخفي افتراضياً */
+        }
+
+        .settings-area h3 {
+            color: #BB86FC;
+            margin-bottom: 20px;
+            text-align: center;
+        }
+
+        .form-group {
+            margin-bottom: 15px;
+            display: flex;
+            flex-direction: column;
+            align-items: flex-end; /* لمحاذاة النص على اليمين */
+        }
+
+        .form-group label {
+            margin-bottom: 5px;
+            color: #E0E0E0;
+            font-size: 1.1em;
+            text-align: right;
+            width: 100%;
+        }
+
+        .form-group input[type="number"],
+        .form-group input[type="text"],
+        .form-group input[type="url"] {
+            width: 100%;
+            padding: 10px;
+            border-radius: 5px;
+            border: 1px solid #BB86FC;
+            background-color: #121212;
+            color: #E0E0E0;
+            font-size: 1em;
+            box-sizing: border-box;
+            text-align: right; /* لمحاذاة النص المدخل على اليمين */
+        }
+
+        .form-group p {
+            font-size: 0.9em;
+            color: #AAAAAA;
+            margin-top: 5px;
+            text-align: right;
+            width: 100%;
+        }
+
+        .settings-buttons {
+            margin-top: 20px;
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+            flex-wrap: wrap;
+        }
+
+        .settings-buttons button {
+            background-color: #03DAC6;
+            color: #121212;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 8px;
+            font-size: 1em;
+            cursor: pointer;
+            transition: background-color 0.3s ease, transform 0.2s ease;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .settings-buttons button:hover {
+            background-color: #018786;
             transform: translateY(-2px);
         }
+
+        .reset-button {
+            background-color: #CF6679 !important; /* لون أحمر خاص لزر إعادة التعيين */
+        }
+
+        .reset-button:hover {
+            background-color: #B00020 !important; /* لون أحمر أغمق عند التحويم */
+        }
+
+        #toggleSettingsBtn {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            background-color: #BB86FC;
+            color: #121212;
+            border: none;
+            padding: 10px 15px;
+            border-radius: 8px;
+            font-size: 1em;
+            cursor: pointer;
+            transition: background-color 0.3s ease, transform 0.2s ease;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        #toggleSettingsBtn:hover {
+            background-color: #6200EA;
+            transform: translateY(-2px);
+        }
+
+        #muteToggleBtn {
+            position: absolute;
+            top: 20px;
+            left: 20px;
+            background-color: #8D6E63; /* لون بني */
+            color: #FFFFFF;
+        }
+
+        #muteToggleBtn:hover {
+            background-color: #5D4037; /* لون بني أغمق */
+        }
+
+        /* شريط تقدم الصوت */
+        .audio-progress-container {
+            width: 80%;
+            background-color: #424242;
+            border-radius: 5px;
+            height: 10px;
+            margin: 10px auto;
+        }
+
+        .audio-progress-bar {
+            height: 100%;
+            width: 0%;
+            background-color: #03DAC6;
+            border-radius: 5px;
+            transition: width 0.1s linear;
+        }
+
+        .player-actions {
+            margin-top: 20px;
+            display: flex;
+            gap: 10px;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+
+        .player-actions button {
+            background-color: #BB86FC;
+            color: #121212;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 8px;
+            font-size: 1em;
+            cursor: pointer;
+            transition: background-color 0.3s ease, transform 0.2s ease;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .player-actions button:hover {
+            background-color: #6200EA;
+            transform: translateY(-2px);
+        }
+
     </style>
 </head>
 <body>
+    <div id="countdownOverlay"></div>
+
     <div class="container">
-        <h1>Voice Boom Game</h1>
-        
+        <button id="toggleSettingsBtn"><i class="fas fa-cog"></i> إظهار الإعدادات</button>
+        <button id="muteToggleBtn"><i class="fas fa-volume-up"></i> كتم الصوت</button>
+
+        <h1>Voice Boom</h1>
+
         <div class="user-info">
-            <p>مرحباً بك، <span id="usernameDisplay"></span>!</p>
-            <p>العملات: <span id="playerCoinsDisplay"></span></p>
-            <p>نقاط الحظ: <span id="luckyPointsDisplay"></span></p>
-            <p>جولات لعبت: <span id="roundsPlayedDisplay"></span></p>
-            <a href="admin.html" id="adminPanelLink" class="admin-panel-link">لوحة المدير</a>
+            <h2>معلومات اللاعب</h2>
+            <p>اسم المستخدم: <span id="username">تحميل...</span></p>
+            <p>العملات: <span id="playerCoins">0</span></p>
+            <p>النقاط المحظوظة: <span id="luckyPoints">0</span></p>
+            <p>الجولات الملعوبة: <span id="roundsPlayed">0</span></p>
         </div>
 
-        <div class="game-area">
-            <h2>ابدأ اللعب</h2>
-            <div class="game-buttons">
-                <button id="autoPlayBtn">لعب تلقائي</button>
-                <button id="tripleStrikeBtn">ضربة ثلاثية</button>
-                <button id="hammerStrikeBtn">ضربة المطرقة</button>
-            </div>
-            <div class="game-message-box">
-                <p id="gameMessage">اضغط "تلقائي" أو "ضربة ثلاثية" أو "ضربة المطرقة" للكشف عن النقاط!</p>
-            </div>
+        <div class="game-messages">
+            <p id="gameMessage" class="message"></p>
         </div>
 
-        <div id="settingsArea" class="settings-area" style="display: none;">
-            <h2>إعدادات اللعبة</h2>
-            <label for="initialCoins">العملات الأولية:</label>
-            <input type="number" id="initialCoins" placeholder="مثال: 500"><br>
+        <div class="game-area" id="gameArea">
+            </div>
+
+        <div class="audio-progress-container">
+            <div class="audio-progress-bar" id="audioProgressBar"></div>
+        </div>
+
+        <div class="player-actions">
+            <button id="autoPlayBtn"><i class="fas fa-play"></i> لعب تلقائي</button>
+            <button id="tripleStrikeBtn"><i class="fas fa-hand-rock"></i> ضربة ثلاثية</button>
+            <button id="hammerStrikeBtn"><i class="fas fa-hammer"></i> ضربة المطرقة</button>
+        </div>
+
+        <div class="settings-area" id="settingsArea">
+            <h3>إعدادات المشرف</h3>
+
+            <h3>إعدادات اللعبة</h3>
+            <div class="form-group">
+                <label for="numBoxesInput">عدد الصناديق في الجولة:</label>
+                <input type="number" id="numBoxesInput" min="5" max="100" value="10">
+            </div>
             
-            <label for="autoPlayCost">تكلفة اللعب التلقائي:</label>
-            <input type="number" id="autoPlayCost" placeholder="مثال: 20"><br>
+            <div class="form-group">
+                <label for="num10PointsBoxesInput">عدد الصناديق التي تضيف 10 نقاط:</label>
+                <input type="number" id="num10PointsBoxesInput" min="0" value="1">
+            </div>
+            <div class="form-group">
+                <label for="num5PointsBoxesInput">عدد الصناديق التي تضيف 5 نقاط:</label>
+                <input type="number" id="num5PointsBoxesInput" min="0" value="2">
+            </div>
+            <div class="form-group">
+                <label for="num1PointsBoxesInput">عدد الصناديق التي تضيف 1 نقطة:</label>
+                <input type="number" id="num1PointsBoxesInput" min="0" value="3">
+            </div>
 
-            <label for="tripleStrikeCost">تكلفة الضربة الثلاثية:</label>
-            <input type="number" id="tripleStrikeCost" placeholder="مثal: 30"><br>
+            <div class="form-group">
+                <label for="numNegative5PointsBoxesInput">عدد صناديق الضريبة (-5 نقاط):</label>
+                <input type="number" id="numNegative5PointsBoxesInput" min="0" value="1">
+            </div>
+            <div class="form-group">
+                <label for="numNegative10PointsBoxesInput">عدد صناديق الضريبة (-10 نقاط):</label>
+                <input type="number" id="numNegative10PointsBoxesInput" min="0" value="0">
+                <p>صناديق الضريبة ستخصم النقاط من رصيدك.</p>
+            </div>
 
-            <label for="hammerStrikeCost">تكلفة ضربة المطرقة:</label>
-            <input type="number" id="hammerStrikeCost" placeholder="مثال: 5 نقاط حظ"><br>
-
-            <label for="autoPlayRewardMin">جائزة اللعب التلقائي (الحد الأدنى):</label>
-            <input type="number" id="autoPlayRewardMin" placeholder="مثال: 10"><br>
-
-            <label for="autoPlayRewardMax">جائزة اللعب التلقائي (الحد الأقصى):</label>
-            <input type="number" id="autoPlayRewardMax" placeholder="مثال: 50"><br>
-
-            <label for="tripleStrikeReward">جائزة الضربة الثلاثية (ثابتة):</label>
-            <input type="number" id="tripleStrikeReward" placeholder="مثال: 100"><br>
-
-            <label for="hammerStrikeReward">جائزة ضربة المطرقة (ثابتة):</label>
-            <input type="number" id="hammerStrikeReward" placeholder="مثال: 500"><br>
-
-            <label for="adminRewardMultiplier">مضاعف جائزة المدير:</label>
-            <input type="number" id="adminRewardMultiplier" step="0.1" placeholder="مثال: 1.5"><br>
-
-            <label for="backgroundUrl">رابط صورة الخلفية:</label>
-            <input type="text" id="backgroundUrl" placeholder="مثال: https://example.com/bg.jpg"><br>
-
-            <label for="soundUrl">رابط ملف الصوت:</label>
-            <input type="text" id="soundUrl" placeholder="مثال: https://example.com/music.mp3"><br>
-
-            <button id="saveSettingsBtn"><i class="fas fa-save"></i> حفظ الإعدادات</button>
-            <button id="resetGameBtn"><i class="fas fa-redo"></i> إعادة تعيين اللعبة (لجميع المستخدمين)</button>
-            <button id="muteToggleBtn"><i class="fas fa-volume-up"></i> كتم/تشغيل الصوت</button>
-        </div>
-
-        <button id="toggleSettingsBtn" class="game-buttons" style="display: none; margin-top: 20px;"><i class="fas fa-cog"></i> إظهار/إخفاء الإعدادات</button>
-        
-        <button class="logout-btn" onclick="logout()"><i class="fas fa-sign-out-alt"></i> تسجيل الخروج</button>
-    </div>
-
-    <audio id="gameSound" loop autoplay></audio>
-
-    <script>
-        const backendUrl = 'https://voiceboom-wlxp.onrender.com'; // تأكد من أن هذا هو رابط الواجهة الخلفية الصحيح الخاص بك
-        const gameMessageElement = document.getElementById('gameMessage');
-        const gameSoundElement = document.getElementById('gameSound');
-
-        // عناصر واجهة المستخدم لعرض بيانات اللاعب
-        const usernameDisplay = document.getElementById('usernameDisplay');
-        const playerCoinsDisplay = document.getElementById('playerCoinsDisplay');
-        const luckyPointsDisplay = document.getElementById('luckyPointsDisplay');
-        const roundsPlayedDisplay = document.getElementById('roundsPlayedDisplay');
-        const adminPanelLink = document.getElementById('adminPanelLink');
-
-        // عناصر التحكم في اللعبة
-        const autoPlayBtn = document.getElementById('autoPlayBtn');
-        const tripleStrikeBtn = document.getElementById('tripleStrikeBtn');
-        const hammerStrikeBtn = document.getElementById('hammerStrikeBtn');
-
-        // عناصر إعدادات المدير
-        const toggleSettingsBtn = document.getElementById('toggleSettingsBtn');
-        const settingsArea = document.getElementById('settingsArea');
-        const saveSettingsBtn = document.getElementById('saveSettingsBtn');
-        const resetGameBtn = document.getElementById('resetGameBtn');
-        const muteToggleBtn = document.getElementById('muteToggleBtn');
-
-        // حقول إعدادات اللعبة
-        const initialCoinsInput = document.getElementById('initialCoins');
-        const autoPlayCostInput = document.getElementById('autoPlayCost');
-        const tripleStrikeCostInput = document.getElementById('tripleStrikeCost');
-        const hammerStrikeCostInput = document.getElementById('hammerStrikeCost');
-        const autoPlayRewardMinInput = document.getElementById('autoPlayRewardMin');
-        const autoPlayRewardMaxInput = document.getElementById('autoPlayRewardMax');
-        const tripleStrikeRewardInput = document.getElementById('tripleStrikeReward');
-        const hammerStrikeRewardInput = document.getElementById('hammerStrikeReward');
-        const adminRewardMultiplierInput = document.getElementById('adminRewardMultiplier');
-        const backgroundUrlInput = document.getElementById('backgroundUrl');
-        const soundUrlInput = document.getElementById('soundUrl');
-
-        let isMuted = false;
-
-        // ----------------------------------------------------
-        // وظائف عامة
-        // ----------------------------------------------------
-        function logout() {
-            localStorage.removeItem('token');
-            window.location.href = 'index.html'; // أو صفحة تسجيل الدخول الخاصة بك
-        }
-
-        function displayGameMessage(message, type = 'info') {
-            gameMessageElement.textContent = message;
-            gameMessageElement.style.color = type === 'error' ? '#dc3545' : '#FFD700';
-        }
-
-        function updateUI(userData) {
-            usernameDisplay.textContent = userData.username;
-            playerCoinsDisplay.textContent = userData.playerCoins;
-            luckyPointsDisplay.textContent = userData.luckyPoints;
-            roundsPlayedDisplay.textContent = userData.roundsPlayed;
-
-            // إظهار/إخفاء رابط لوحة المدير وزر إظهار الإعدادات
-            if (userData.isAdmin) {
-                adminPanelLink.style.display = 'inline-block';
-                toggleSettingsBtn.style.display = 'inline-block';
-            } else {
-                adminPanelLink.style.display = 'none';
-                toggleSettingsBtn.style.display = 'none';
-                settingsArea.style.display = 'none'; // تأكد من إخفاء الإعدادات إذا لم يكن مديراً
-            }
-            updateActionButtonsState(userData); // تحديث حالة الأزرار بناءً على عملات اللاعب
-        }
-
-        function updateActionButtonsState(userData) {
-            autoPlayBtn.disabled = userData.playerCoins < (parseFloat(autoPlayCostInput.value) || 20); // يستخدم القيمة من الإعدادات
-            tripleStrikeBtn.disabled = userData.playerCoins < (parseFloat(tripleStrikeCostInput.value) || 30);
-            hammerStrikeBtn.disabled = userData.luckyPoints < (parseFloat(hammerStrikeCostInput.value) || 5);
-        }
-        
-        function toggleMute() {
-            isMuted = !isMuted;
-            if (isMuted) {
-                gameSoundElement.pause();
-                muteToggleBtn.innerHTML = '<i class="fas fa-volume-mute"></i> تشغيل الصوت';
-            } else {
-                gameSoundElement.play().catch(e => console.log("Autoplay prevented:", e));
-                muteToggleBtn.innerHTML = '<i class="fas fa-volume-up"></i> كتم الصوت';
-            }
-        }
-
-
-        // ----------------------------------------------------
-        // جلب بيانات المستخدم وإعدادات اللعبة
-        // ----------------------------------------------------
-        async function fetchUserDataAndSettings() {
-            const token = localStorage.getItem('token');
-            if (!token) {
-                alert('الرجاء تسجيل الدخول.');
-                window.location.href = 'index.html';
-                return;
-            }
-
-            try {
-                // جلب بيانات المستخدم
-                const userResponse = await fetch(`${backendUrl}/api/user/data`, {
-                    method: 'GET',
-                    headers: {
-                        'Content-Type': 'application/json',
-                        'x-auth-token': token
-                    }
-                });
-                const userData = await userResponse.json();
-
-                if (!userResponse.ok) {
-                    console.error('Failed to fetch user data:', userData.message);
-                    if (userResponse.status === 401) {
-                        alert('جلسة المستخدم انتهت، الرجاء تسجيل الدخول مرة أخرى.');
-                        window.location.href = 'index.html';
-                    } else {
-                        alert('فشل في جلب بيانات المستخدم: ' + userData.message);
-                    }
-                    return;
-                }
-                updateUI(userData); // تحديث معلومات المستخدم في الواجهة
-
-                // جلب إعدادات اللعبة (يحتاج مسار خاص بالإعدادات)
-                const settingsResponse = await fetch(`${backendUrl}/api/admin/settings`, { // هذا المسار يتطلب أن يكون المستخدم مديراً!
-                    method: 'GET',
-                    headers: {
-                        'Content-Type': 'application/json',
-                        'x-auth-token': token
-                    }
-                });
-                const settingsData = await settingsResponse.json();
-
-                if (settingsResponse.ok) {
-                    // ملء حقول الإعدادات في الواجهة (للمدير)
-                    initialCoinsInput.value = settingsData.initialCoins;
-                    autoPlayCostInput.value = settingsData.autoPlayCost;
-                    tripleStrikeCostInput.value = settingsData.tripleStrikeCost;
-                    hammerStrikeCostInput.value = settingsData.hammerStrikeCost;
-                    autoPlayRewardMinInput.value = settingsData.autoPlayRewardMin;
-                    autoPlayRewardMaxInput.value = settingsData.autoPlayRewardMax;
-                    tripleStrikeRewardInput.value = settingsData.tripleStrikeReward;
-                    hammerStrikeRewardInput.value = settingsData.hammerStrikeReward;
-                    adminRewardMultiplierInput.value = settingsData.adminRewardMultiplier;
-                    backgroundUrlInput.value = settingsData.currentBackgroundUrl;
-                    soundUrlInput.value = settingsData.currentSoundUrl;
-
-                    // تطبيق الخلفية
-                    if (settingsData.currentBackgroundUrl) {
-                        document.body.style.backgroundImage = `url('${settingsData.currentBackgroundUrl}')`;
-                    } else {
-                        document.body.style.backgroundImage = `url('background_image.jpg')`; // خلفية افتراضية
-                    }
-                    
-                    // تطبيق الصوت
-                    if (settingsData.currentSoundUrl) {
-                        gameSoundElement.src = settingsData.currentSoundUrl;
-                        if (!isMuted) { // تشغيل فقط إذا لم يتم كتم الصوت يدوياً
-                             gameSoundElement.play().catch(e => console.log('Autoplay prevented:', e));
-                        }
-                    } else {
-                        gameSoundElement.pause(); // لا يوجد صوت إذا لم يتم تحديده
-                    }
-
-                    updateActionButtonsState(userData); // تحديث الأزرار بناءً على الإعدادات الجديدة والعملات
-                } else {
-                    console.warn('Could not fetch game settings (this is normal if not an admin):', settingsData.message);
-                    // إذا لم يتمكن المستخدم من جلب الإعدادات (لأنه ليس مديراً)، يجب أن نستخدم القيم الافتراضية
-                    // أو القيم المخزنة محلياً إذا كانت الإعدادات الأساسية ضرورية للعب كلاعب عادي
-                    updateActionButtonsState(userData); // تحديث الأزرار بناءً على القيم الافتراضية إذا لم يتم جلب الإعدادات
-                }
-
-            } catch (error) {
-                console.error('Error fetching data or settings:', error);
-                alert('حدث خطأ في الاتصال بالخادم.');
-            }
-        }
-
-        // ----------------------------------------------------
-        // وظائف إجراءات اللعبة (مثلا auto-play)
-        // ----------------------------------------------------
-        async function performGameAction(actionType) {
-            const token = localStorage.getItem('token');
-            if (!token) {
-                alert('الرجاء تسجيل الدخول للعب.');
-                window.location.href = 'index.html';
-                return;
-            }
-
-            displayGameMessage('جاري معالجة طلبك...');
-
-            try {
-                const response = await fetch(`${backendUrl}/api/user/${actionType}`, {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json',
-                        'x-auth-token': token
-                    }
-                });
-                const result = await response.json();
-
-                if (response.ok) {
-                    displayGameMessage(result.message);
-                    updateUI(result); // تحديث العملات والنقاط في الواجهة
-                } else {
-                    displayGameMessage(result.message, 'error');
-                    if (response.status === 401) {
-                        alert('جلسة المستخدم انتهت، الرجاء تسجيل الدخول مرة أخرى.');
-                        window.location.href = 'index.html';
-                    }
-                }
-            } catch (error) {
-                console.error(`Error performing ${actionType}:`, error);
-                displayGameMessage('حدث خطأ في الاتصال بالخادم أثناء اللعب.', 'error');
-            }
-        }
-
-        // ----------------------------------------------------
-        // وظائف إعدادات المدير
-        // ----------------------------------------------------
-        async function saveSettings() {
-            const token = localStorage.getItem('token');
-            if (!token) {
-                alert('لا يمكن حفظ الإعدادات: غير مصرح لك.');
-                window.location.href = 'index.html';
-                return;
-            }
-
-            const settings = {
-                initialCoins: parseFloat(initialCoinsInput.value),
-                autoPlayCost: parseFloat(autoPlayCostInput.value),
-                tripleStrikeCost: parseFloat(tripleStrikeCostInput.value),
-                hammerStrikeCost: parseFloat(hammerStrikeCostInput.value),
-                autoPlayRewardMin: parseFloat(autoPlayRewardMinInput.value),
-                autoPlayRewardMax: parseFloat(autoPlayRewardMaxInput.value),
-                tripleStrikeReward: parseFloat(tripleStrikeRewardInput.value),
-                hammerStrikeReward: parseFloat(hammerStrikeRewardInput.value),
-                adminRewardMultiplier: parseFloat(adminRewardMultiplierInput.value),
-                currentBackgroundUrl: backgroundUrlInput.value,
-                currentSoundUrl: soundUrlInput.value
-            };
-
-            displayGameMessage('جاري حفظ الإعدادات...');
-
-            try {
-                // IMPORTANT: THIS IS THE LINE THAT WAS CHANGED TO PUT
-                const response = await fetch(`${backendUrl}/api/admin/settings`, {
-                    method: 'PUT', // <--- تأكد من أن هذا PUT!
-                    headers: {
-                        'Content-Type': 'application/json',
-                        'x-auth-token': token
-                    },
-                    body: JSON.stringify(settings)
-                });
-                const result = await response.json();
-
-                if (response.ok) {
-                    displayGameMessage(result.message, 'info');
-                    fetchUserDataAndSettings(); // إعادة جلب البيانات لتطبيق التغييرات فورا
-                } else {
-                    displayGameMessage(result.message, 'error');
-                }
-            } catch (error) {
-                console.error('Error saving settings:', error);
-                displayGameMessage('حدث خطأ في الاتصال بالخادم أثناء حفظ الإعدادات.', 'error');
-            }
-        }
-
-        async function resetGameForUsers() {
-            if (!confirm('هل أنت متأكد أنك تريد إعادة تعيين اللعبة لجميع المستخدمين؟ هذا لا يمكن التراجع عنه!')) {
-                return;
-            }
-
-            const token = localStorage.getItem('token');
-            if (!token) {
-                alert('لا يمكن إعادة تعيين اللعبة: غير مصرح لك.');
-                window.location.href = 'index.html';
-                return;
-            }
-
-            displayGameMessage('جاري إعادة تعيين اللعبة لجميع المستخدمين...');
-
-            try {
-                const response = await fetch(`${backendUrl}/api/admin/reset-all-users`, { // تأكد من هذا المسار في الـ backend
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json',
-                        'x-auth-token': token
-                    }
-                });
-                const result = await response.json();
-
-                if (response.ok) {
-                    displayGameMessage(result.message, 'info');
-                    fetchUserDataAndSettings(); // تحديث بيانات المستخدم الحالي بعد إعادة التعيين
-                } else {
-                    displayGameMessage(result.message, 'error');
-                }
-            } catch (error) {
-                console.error('Error resetting game:', error);
-                displayGameMessage('حدث خطأ في الاتصال بالخادم أثناء إعادة تعيين اللعبة.', 'error');
-            }
-        }
-
-        // ----------------------------------------------------
-        // ربط الأحداث
-        // ----------------------------------------------------
-        document.addEventListener('DOMContentLoaded', fetchUserDataAndSettings);
-        
-        autoPlayBtn.addEventListener('click', () => performGameAction('auto-play'));
-        tripleStrikeBtn.addEventListener('click', () => performGameAction('triple-strike'));
-        hammerStrikeBtn.addEventListener('click', () => performGameAction('hammer-strike'));
-
-        toggleSettingsBtn.addEventListener('click', () => {
-            if (settingsArea.style.display === 'none') {
-                settingsArea.style.display = 'block';
-                toggleSettingsBtn.innerHTML = '<i class="fas fa-eye-slash"></i> إخفاء الإعدادات';
-            } else {
-                settingsArea.style.display = 'none';
-                toggleSettingsBtn.innerHTML = '<i class="fas fa-cog"></i> إظهار الإعدادات';
-            }
-        });
-
-        saveSettingsBtn.addEventListener('click', saveSettings);
-        resetGameBtn.addEventListener('click', resetGameForUsers);
-        muteToggleBtn.addEventListener('click', toggleMute);
-
-    </script>
-</body>
-</html>
+            <div class="form-group">
+                <label for="autoPlayCostInput">تكلفة اللعب التلقائي (عملات):</label>
+                <input type="number" id="autoPlayCostInput" min="0" value="100">
+            </div>
+            <div class="form-group">
+                <label for="auto
