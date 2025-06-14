@@ -2,7 +2,8 @@
 <html lang="ar" dir="rtl">
 <head>
     <meta charset="UTF-8">
-    <title>INFINITY - تسجيل الدخول / التسجيل</title> <link href="https://fonts.googleapis.com/css2?family=Amiri&family=Scheherazade+New:wght@400;700&family=Noto+Naskh+Arabic:wght@400;700&display=swap" rel="stylesheet">
+    <title>INFINITY - تسجيل الدخول / التسجيل</title>
+    <link href="https://fonts.googleapis.com/css2?family=Amiri&family=Scheherazade+New:wght@400;700&family=Noto+Naskh+Arabic:wght@400;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
     <style>
         body {
@@ -224,18 +225,23 @@
 
         <div class="tab-buttons">
             <button class="tab-button active" data-tab="login">تسجيل الدخول</button>
-            <button class="tab-button" data-tab="register">التسجيل</button> <button class="tab-button" data-tab="contact">تواصل معنا</button>
+            <button class="tab-button" data-tab="register">التسجيل</button>
+            <button class="tab-button" data-tab="contact">تواصل معنا</button>
             <button class="tab-button" data-tab="instructions">التعليمات</button>
         </div>
 
         <form id="loginTab" class="tab-content active">
             <div class="input-group">
-                <label for="loginUsername">اسم المستخدم:</label> <input type="text" id="loginUsername" placeholder="أدخل اسم المستخدم الخاص بك" required>
+                <label for="loginUsername">اسم المستخدم:</label>
+                <input type="text" id="loginUsername" placeholder="أدخل اسم المستخدم الخاص بك" required>
             </div>
             <div class="input-group">
-                <label for="loginPassword">كلمة المرور:</label> <input type="password" id="loginPassword" placeholder="أدخل كلمة المرور" required>
+                <label for="loginPassword">كلمة المرور:</label>
+                <input type="password" id="loginPassword" placeholder="أدخل كلمة المرور" required>
             </div>
-            <div id="loginErrorMessage" class="error-message"></div> <button type="submit">تسجيل الدخول</button> </form>
+            <div id="loginErrorMessage" class="error-message"></div>
+            <button type="submit">تسجيل الدخول</button>
+        </form>
 
         <form id="registerTab" class="tab-content">
             <div class="input-group">
@@ -307,7 +313,158 @@
     </div>
 
     <script>
-        // كود JavaScript سيأتي في الخطوة التالية
+        document.addEventListener('DOMContentLoaded', () => {
+            // عناصر تسجيل الدخول
+            const loginForm = document.getElementById('loginTab');
+            const loginUsernameInput = document.getElementById('loginUsername');
+            const loginPasswordInput = document.getElementById('loginPassword');
+            const loginErrorMessage = document.getElementById('loginErrorMessage');
+
+            // عناصر التسجيل
+            const registerForm = document.getElementById('registerTab');
+            const registerUsernameInput = document.getElementById('registerUsername');
+            const registerEmailInput = document.getElementById('registerEmail');
+            const registerPasswordInput = document.getElementById('registerPassword');
+            const registerConfirmPasswordInput = document.getElementById('registerConfirmPassword');
+            const registerErrorMessage = document.getElementById('registerErrorMessage');
+
+            // عناصر التبويبات
+            const tabButtons = document.querySelectorAll('.tab-button');
+            const tabContents = document.querySelectorAll('.tab-content');
+
+            // وظيفة التبديل بين التبويبات
+            tabButtons.forEach(button => {
+                button.addEventListener('click', () => {
+                    const targetTab = button.dataset.tab; // قيمة 'login', 'register', 'contact', 'instructions'
+
+                    // إزالة فئة 'active' من جميع أزرار التبويبات
+                    tabButtons.forEach(btn => btn.classList.remove('active'));
+                    // إضافة فئة 'active' للزر المضغوط
+                    button.classList.add('active');
+
+                    // إخفاء جميع محتويات التبويبات
+                    tabContents.forEach(content => content.classList.remove('active'));
+                    // إظهار محتوى التبويب المستهدف
+                    // هذا الجزء هو الأهم: يجب أن يكون ID لـ div/form الخاص بالتبويب هو targetTab + 'Tab'
+                    document.getElementById(targetTab + 'Tab').classList.add('active');
+
+                    // مسح رسائل الخطأ عند التبديل بين التبويبات
+                    loginErrorMessage.textContent = '';
+                    registerErrorMessage.textContent = '';
+                });
+            });
+
+            // معالج حدث لنموذج تسجيل الدخول
+            loginForm.addEventListener('submit', async (e) => {
+                e.preventDefault(); // منع إعادة تحميل الصفحة
+
+                const username = loginUsernameInput.value.trim();
+                const password = loginPasswordInput.value.trim();
+
+                if (!username || !password) {
+                    loginErrorMessage.textContent = 'الرجاء إدخال اسم المستخدم وكلمة المرور.';
+                    return;
+                }
+
+                loginErrorMessage.textContent = ''; // مسح أي رسائل خطأ سابقة
+
+                try {
+                    // **الأهم: تأكد من صحة مسار الـ API وعنوان الخادم هنا**
+                    const response = await fetch('https://voiceboom-wlxp.onrender.com/api/auth/login', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json'
+                        },
+                        body: JSON.stringify({ username, password })
+                    });
+
+                    const data = await response.json();
+
+                    if (response.ok) {
+                        localStorage.setItem('token', data.token); // إذا كان الـ backend يرجع token
+                        localStorage.setItem('username', data.username);
+                        localStorage.setItem('isAdmin', data.isAdmin);
+                        window.location.href = 'game.html';
+                    } else {
+                        loginErrorMessage.textContent = data.message || 'فشل تسجيل الدخول. الرجاء التحقق من اسم المستخدم وكلمة المرور.';
+                        // لإظهار رسالة خطأ أكثر تفصيلاً من الـ backend إذا كانت متاحة
+                        if (data.status === 400 && data.message === "Invalid credentials") {
+                            loginErrorMessage.textContent = "اسم المستخدم أو كلمة المرور غير صحيحة.";
+                        } else if (data.status === 500) {
+                            loginErrorMessage.textContent = "خطأ داخلي في الخادم. الرجاء المحاولة لاحقاً.";
+                        }
+                    }
+                } catch (error) {
+                    console.error('Error during login fetch:', error);
+                    loginErrorMessage.textContent = 'حدث خطأ في الاتصال بالخادم. الرجاء التأكد من اتصالك بالإنترنت.';
+                }
+            });
+
+            // معالج حدث لنموذج التسجيل
+            registerForm.addEventListener('submit', async (e) => {
+                e.preventDefault(); // منع إعادة تحميل الصفحة
+
+                const username = registerUsernameInput.value.trim();
+                const email = registerEmailInput.value.trim();
+                const password = registerPasswordInput.value.trim();
+                const confirmPassword = registerConfirmPasswordInput.value.trim();
+
+                if (!username || !email || !password || !confirmPassword) {
+                    registerErrorMessage.textContent = 'الرجاء ملء جميع الحقول.';
+                    return;
+                }
+
+                if (password !== confirmPassword) {
+                    registerErrorMessage.textContent = 'كلمة المرور وتأكيد كلمة المرور غير متطابقتين.';
+                    return;
+                }
+
+                registerErrorMessage.textContent = ''; // مسح أي رسائل خطأ سابقة
+
+                try {
+                    // **الأهم: تأكد من صحة مسار الـ API وعنوان الخادم هنا**
+                    const response = await fetch('https://voiceboom-wlxp.onrender.com/api/auth/register', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json'
+                        },
+                        body: JSON.stringify({ username, email, password })
+                    });
+
+                    const data = await response.json();
+
+                    if (response.ok) {
+                        registerErrorMessage.style.color = '#2ecc71'; // لون أخضر للنجاح
+                        registerErrorMessage.textContent = data.message || 'تم التسجيل بنجاح! يمكنك الآن تسجيل الدخول.';
+                        // مسح الحقول بعد التسجيل الناجح
+                        registerUsernameInput.value = '';
+                        registerEmailInput.value = '';
+                        registerPasswordInput.value = '';
+                        registerConfirmPasswordInput.value = '';
+
+                        // اختياري: التبديل تلقائياً إلى تبويب تسجيل الدخول بعد التسجيل الناجح
+                        // هذه الخطوة تحاكي النقر على زر "تسجيل الدخول"
+                        document.querySelector('.tab-button[data-tab="login"]').click();
+
+                    } else {
+                        registerErrorMessage.style.color = '#e74c3c'; // لون أحمر للخطأ
+                        registerErrorMessage.textContent = data.message || 'فشل التسجيل.';
+                        // لإظهار رسالة خطأ أكثر تفصيلاً من الـ backend إذا كانت متاحة
+                        if (data.status === 409 && data.message === "Username already exists") {
+                            registerErrorMessage.textContent = "اسم المستخدم موجود بالفعل. الرجاء اختيار اسم آخر.";
+                        } else if (data.status === 409 && data.message === "Email already exists") {
+                            registerErrorMessage.textContent = "البريد الإلكتروني موجود بالفعل. الرجاء استخدام بريد آخر.";
+                        } else if (data.status === 500) {
+                            registerErrorMessage.textContent = "خطأ داخلي في الخادم أثناء التسجيل. الرجاء المحاولة لاحقاً.";
+                        }
+                    }
+                } catch (error) {
+                    console.error('Error during registration fetch:', error);
+                    registerErrorMessage.style.color = '#e74c3c';
+                    registerErrorMessage.textContent = 'حدث خطأ في الاتصال بالخادم أثناء التسجيل. الرجاء التأكد من اتصالك بالإنترنت.';
+                }
+            });
+        });
     </script>
 </body>
 </html>
