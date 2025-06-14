@@ -1,0 +1,725 @@
+<!DOCTYPE html>
+
+<html lang="ar" dir="rtl">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <title>Voice Boom - تسجيل الدخول / تسجيل</title>
+
+    <link href="https://fonts.googleapis.com/css2?family=Amiri&family=Scheherazade+New:wght@400;700&family=Noto+Naskh+Arabic:wght@400;700&display=swap" rel="stylesheet">
+
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+
+    <style>
+
+        body {
+
+            font-family: 'Noto Naskh Arabic', sans-serif;
+
+            background-color: #2c3e50;
+
+            color: #ecf0f1;
+
+            display: flex;
+
+            justify-content: center;
+
+            align-items: center;
+
+            min-height: 100vh;
+
+            margin: 0;
+
+            padding: 20px;
+
+            box-sizing: border-box;
+
+            background-image: url('background_image.jpg'); /* تأكد من وجود هذه الصورة في نفس المجلد */
+
+            background-size: cover;
+
+            background-position: center;
+
+            background-attachment: fixed;
+
+            position: relative;
+
+        }
+
+
+
+        body::before {
+
+            content: '';
+
+            position: absolute;
+
+            top: 0;
+
+            left: 0;
+
+            right: 0;
+
+            bottom: 0;
+
+            background-color: rgba(0, 0, 0, 0.5); /* طبقة شفافة لتعتيم الصورة الخلفية */
+
+            z-index: 1;
+
+        }
+
+
+
+        .container {
+
+            background-color: rgba(44, 62, 80, 0.9); /* خلفية شبه شفافة للمحتوى */
+
+            padding: 40px;
+
+            border-radius: 10px;
+
+            box-shadow: 0 0 20px rgba(0, 0, 0, 0.5);
+
+            width: 100%;
+
+            max-width: 450px;
+
+            text-align: center;
+
+            z-index: 2;
+
+            position: relative;
+
+        }
+
+
+
+        h2 {
+
+            color: #ecf0f1;
+
+            margin-bottom: 25px;
+
+            font-family: 'Amiri', serif;
+
+            font-size: 2.2em;
+
+            letter-spacing: 1px;
+
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.7);
+
+        }
+
+
+
+        .tab-container {
+
+            display: flex;
+
+            margin-bottom: 30px;
+
+            border-radius: 8px;
+
+            overflow: hidden;
+
+            box-shadow: inset 0 0 10px rgba(0, 0, 0, 0.3);
+
+        }
+
+
+
+        .tab-button {
+
+            flex: 1;
+
+            padding: 15px 0;
+
+            background-color: #34495e;
+
+            color: #ecf0f1;
+
+            border: none;
+
+            cursor: pointer;
+
+            font-size: 1.1em;
+
+            transition: background-color 0.3s ease, color 0.3s ease;
+
+            font-family: 'Noto Naskh Arabic', sans-serif;
+
+            font-weight: 700;
+
+        }
+
+
+
+        .tab-button.active {
+
+            background-color: #e67e22; /* لون برتقالي نشط */
+
+            color: #fff;
+
+            box-shadow: 0 0 15px rgba(230, 126, 34, 0.7);
+
+        }
+
+
+
+        .tab-button:hover:not(.active) {
+
+            background-color: #49637e;
+
+        }
+
+
+
+        .form-group {
+
+            margin-bottom: 20px;
+
+            text-align: right;
+
+        }
+
+
+
+        .form-group label {
+
+            display: block;
+
+            margin-bottom: 8px;
+
+            font-size: 1em;
+
+            color: #bdc3c7;
+
+        }
+
+
+
+        .form-group input {
+
+            width: calc(100% - 22px);
+
+            padding: 12px;
+
+            border: 1px solid #7f8c8d;
+
+            border-radius: 5px;
+
+            background-color: #34495e;
+
+            color: #ecf0f1;
+
+            font-size: 1em;
+
+            transition: border-color 0.3s ease, box-shadow 0.3s ease;
+
+            outline: none;
+
+            text-align: right; /* لجعل الكتابة من اليمين لليسار */
+
+        }
+
+
+
+        .form-group input:focus {
+
+            border-color: #e67e22;
+
+            box-shadow: 0 0 8px rgba(230, 126, 34, 0.5);
+
+        }
+
+
+
+        .form-group input::placeholder {
+
+            color: #95a5a6;
+
+        }
+
+
+
+        button.submit-button {
+
+            width: 100%;
+
+            padding: 15px;
+
+            background-color: #e67e22; /* لون برتقالي */
+
+            color: #fff;
+
+            border: none;
+
+            border-radius: 5px;
+
+            font-size: 1.2em;
+
+            font-weight: 700;
+
+            cursor: pointer;
+
+            transition: background-color 0.3s ease, transform 0.2s ease;
+
+            box-shadow: 0 5px 15px rgba(230, 126, 34, 0.4);
+
+            font-family: 'Noto Naskh Arabic', sans-serif;
+
+        }
+
+
+
+        button.submit-button:hover {
+
+            background-color: #d35400; /* لون برتقالي أغمق عند التحويم */
+
+            transform: translateY(-2px);
+
+        }
+
+
+
+        .error-message {
+
+            color: #e74c3c;
+
+            margin-top: 15px;
+
+            font-size: 0.95em;
+
+            min-height: 20px; /* للحفاظ على المساحة حتى لو لم يكن هناك خطأ */
+
+            text-align: center;
+
+        }
+
+
+
+        .success-message {
+
+            color: #2ecc71;
+
+            margin-top: 15px;
+
+            font-size: 0.95em;
+
+            min-height: 20px;
+
+            text-align: center;
+
+        }
+
+
+
+        .hidden {
+
+            display: none;
+
+        }
+
+    </style>
+
+</head>
+
+<body>
+
+    <div class="container">
+
+        <h2>Voice Boom</h2>
+
+
+
+        <div class="tab-container">
+
+            <button class="tab-button active" id="loginTab">تسجيل الدخول</button>
+
+            <button class="tab-button" id="registerTab">تسجيل جديد</button>
+
+        </div>
+
+
+
+        <div id="loginForm">
+
+            <div class="form-group">
+
+                <label for="loginUsername">اسم المستخدم أو البريد الإلكتروني:</label>
+
+                <input type="text" id="loginUsername" placeholder="ادخل اسم المستخدم أو البريد الإلكتروني" required>
+
+            </div>
+
+            <div class="form-group">
+
+                <label for="loginPassword">كلمة المرور:</label>
+
+                <input type="password" id="loginPassword" placeholder="ادخل كلمة المرور" required>
+
+            </div>
+
+            <button type="submit" class="submit-button" id="loginButton">تسجيل الدخول</button>
+
+            <p class="error-message" id="loginErrorMessage"></p>
+
+        </div>
+
+
+
+        <div id="registerForm" class="hidden">
+
+            <div class="form-group">
+
+                <label for="registerUsername">اسم المستخدم:</label>
+
+                <input type="text" id="registerUsername" placeholder="اختر اسم مستخدم" required>
+
+            </div>
+
+            <div class="form-group">
+
+                <label for="registerEmail">البريد الإلكتروني:</label>
+
+                <input type="email" id="registerEmail" placeholder="ادخل بريدك الإلكتروني" required>
+
+            </div>
+
+            <div class="form-group">
+
+                <label for="registerPassword">كلمة المرور:</label>
+
+                <input type="password" id="registerPassword" placeholder="اختر كلمة مرور" required>
+
+            </div>
+
+            <button type="submit" class="submit-button" id="registerButton">تسجيل</button>
+
+            <p class="error-message" id="registerErrorMessage"></p>
+
+            <p class="success-message" id="registerSuccessMessage"></p>
+
+        </div>
+
+    </div>
+
+
+
+    <script>
+
+        document.addEventListener('DOMContentLoaded', () => {
+
+            const loginTab = document.getElementById('loginTab');
+
+            const registerTab = document.getElementById('registerTab');
+
+            const loginForm = document.getElementById('loginForm');
+
+            const registerForm = document.getElementById('registerForm');
+
+            const loginButton = document.getElementById('loginButton');
+
+            const registerButton = document.getElementById('registerButton');
+
+
+
+            const loginUsernameInput = document.getElementById('loginUsername');
+
+            const loginPasswordInput = document.getElementById('loginPassword');
+
+            const registerUsernameInput = document.getElementById('registerUsername');
+
+            const registerEmailInput = document.getElementById('registerEmail');
+
+            const registerPasswordInput = document.getElementById('registerPassword');
+
+
+
+            const loginErrorMessage = document.getElementById('loginErrorMessage');
+
+            const registerErrorMessage = document.getElementById('registerErrorMessage');
+
+            const registerSuccessMessage = document.getElementById('registerSuccessMessage');
+
+
+
+            // إخفاء رسائل الخطأ/النجاح عند التبديل بين الألسنة
+
+            function hideMessages() {
+
+                loginErrorMessage.textContent = '';
+
+                registerErrorMessage.textContent = '';
+
+                registerSuccessMessage.textContent = '';
+
+            }
+
+
+
+            loginTab.addEventListener('click', () => {
+
+                loginTab.classList.add('active');
+
+                registerTab.classList.remove('active');
+
+                loginForm.classList.remove('hidden');
+
+                registerForm.classList.add('hidden');
+
+                hideMessages();
+
+            });
+
+
+
+            registerTab.addEventListener('click', () => {
+
+                registerTab.classList.add('active');
+
+                loginTab.classList.remove('active');
+
+                registerForm.classList.remove('hidden');
+
+                loginForm.classList.add('hidden');
+
+                hideMessages();
+
+            });
+
+
+
+            // معالج حدث تسجيل الدخول
+
+            if (loginButton) {
+
+                loginButton.addEventListener('click', async () => {
+
+                    const username = loginUsernameInput.value;
+
+                    const password = loginPasswordInput.value;
+
+
+
+                    if (!username || !password) {
+
+                        loginErrorMessage.textContent = 'الرجاء إدخال اسم المستخدم/البريد الإلكتروني وكلمة المرور.';
+
+                        return;
+
+                    }
+
+
+
+                    loginErrorMessage.textContent = ''; // مسح أي رسائل خطأ سابقة
+
+
+
+                    try {
+
+                        const response = await fetch('https://voiceboom-wlxp.onrender.com/api/auth/login', {
+
+                            method: 'POST',
+
+                            headers: {
+
+                                'Content-Type': 'application/json'
+
+                            },
+
+                            body: JSON.stringify({ username, password })
+
+                        });
+
+
+
+                        const data = await response.json();
+
+
+
+                        if (response.ok) {
+
+                            // تم تحديث هذا الجزء لحفظ الـ token واسم المستخدم من استجابة الخادم
+
+                            localStorage.setItem('token', data.token); // حفظ التوكن
+
+                            localStorage.setItem('username', data.username); // استخدام اسم المستخدم القادم من الخادم
+
+                            localStorage.setItem('isAdmin', data.isAdmin);
+
+
+
+                            window.location.href = 'game.html'; // التوجيه إلى صفحة اللعبة
+
+                        } else {
+
+                            loginErrorMessage.textContent = data.message || 'فشل تسجيل الدخول. الرجاء التحقق من اسم المستخدم وكلمة المرور.';
+
+                        }
+
+                    } catch (error) {
+
+                        console.error('Error during login:', error);
+
+                        loginErrorMessage.textContent = 'حدث خطأ غير متوقع. الرجاء المحاولة مرة أخرى لاحقاً.';
+
+                    }
+
+                });
+
+            }
+
+
+
+            // معالج حدث التسجيل
+
+            if (registerButton) {
+
+                registerButton.addEventListener('click', async () => {
+
+                    const username = registerUsernameInput.value;
+
+                    const email = registerEmailInput.value;
+
+                    const password = registerPasswordInput.value;
+
+
+
+                    if (!username || !email || !password) {
+
+                        registerErrorMessage.textContent = 'الرجاء إدخال جميع الحقول.';
+
+                        return;
+
+                    }
+
+
+
+                    registerErrorMessage.textContent = ''; // مسح أي رسائل خطأ سابقة
+
+                    registerSuccessMessage.textContent = '';
+
+
+
+                    try {
+
+                        const response = await fetch('https://voiceboom-wlxp.onrender.com/api/auth/register', {
+
+                            method: 'POST',
+
+                            headers: {
+
+                                'Content-Type': 'application/json'
+
+                            },
+
+                            body: JSON.stringify({ username, email, password })
+
+                        });
+
+
+
+                        const data = await response.json();
+
+
+
+                        if (response.ok) {
+
+                            registerSuccessMessage.textContent = data.message || 'تم التسجيل بنجاح! يمكنك الآن تسجيل الدخول.';
+
+                            registerUsernameInput.value = '';
+
+                            registerEmailInput.value = '';
+
+                            registerPasswordInput.value = '';
+
+                            // يمكن توجيه المستخدم مباشرة إلى تبويب تسجيل الدخول
+
+                            loginTab.click(); // تبديل إلى تبويب تسجيل الدخول
+
+                        } else {
+
+                            registerErrorMessage.textContent = data.message || 'فشل التسجيل. الرجاء المحاولة مرة أخرى.';
+
+                        }
+
+                    } catch (error) {
+
+                        console.error('Error during registration:', error);
+
+                        registerErrorMessage.textContent = 'حدث خطأ غير متوقع أثناء التسجيل. الرجاء المحاولة مرة أخرى لاحقاً.';
+
+                    }
+
+                });
+
+            }
+
+
+
+            // يمكن للمستخدمين الضغط على Enter لتسجيل الدخول
+
+            loginUsernameInput.addEventListener('keypress', (e) => {
+
+                if (e.key === 'Enter') {
+
+                    loginButton.click();
+
+                }
+
+            });
+
+            loginPasswordInput.addEventListener('keypress', (e) => {
+
+                if (e.key === 'Enter') {
+
+                    loginButton.click();
+
+                }
+
+            });
+
+
+
+            // يمكن للمستخدمين الضغط على Enter للتسجيل
+
+            registerUsernameInput.addEventListener('keypress', (e) => {
+
+                if (e.key === 'Enter') {
+
+                    registerButton.click();
+
+                }
+
+            });
+
+            registerEmailInput.addEventListener('keypress', (e) => {
+
+                if (e.key === 'Enter') {
+
+                    registerButton.click();
+
+                }
+
+            });
+
+            registerPasswordInput.addEventListener('keypress', (e) => {
+
+                if (e.key === 'Enter') {
+
+                    registerButton.click();
+
+                }
+
+            });
+
+        });
+
+    </script>
+
+</body>
+
+</html>
