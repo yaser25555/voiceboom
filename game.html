@@ -256,7 +256,7 @@
             <input type="number" id="autoPlayCost" placeholder="مثال: 20"><br>
 
             <label for="tripleStrikeCost">تكلفة الضربة الثلاثية:</label>
-            <input type="number" id="tripleStrikeCost" placeholder="مثال: 30"><br>
+            <input type="number" id="tripleStrikeCost" placeholder="مثal: 30"><br>
 
             <label for="hammerStrikeCost">تكلفة ضربة المطرقة:</label>
             <input type="number" id="hammerStrikeCost" placeholder="مثال: 5 نقاط حظ"><br>
@@ -538,8 +538,9 @@
             displayGameMessage('جاري حفظ الإعدادات...');
 
             try {
+                // IMPORTANT: THIS IS THE LINE THAT WAS CHANGED TO PUT
                 const response = await fetch(`${backendUrl}/api/admin/settings`, {
-                    method: 'POST',
+                    method: 'PUT', // <--- تأكد من أن هذا PUT!
                     headers: {
                         'Content-Type': 'application/json',
                         'x-auth-token': token
